@@ -1,8 +1,398 @@
-<p>Hello 大家好</p>
-<p>我是霸都丶傲天，这是我的个人网站。 </p>
-<p>很高兴你来到这里, 你可以在以下的网站找到我</p>
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { 
+  Shield, 
+  Zap, 
+  Cpu, 
+  Globe, 
+  BarChart3, 
+  Terminal, 
+  Gamepad2, 
+  ArrowRight,
+  ChevronRight,
+  Play,
+  Download,
+  Share2,
+  Users,
+  Layers,
+  Skull,
+  Send,
+  Loader2,
+  Sparkles,
+  AlertCircle
+} from 'lucide-react';
 
-<ul>
-  <li> <a href="https://www.zhihu.com/people/AJLoveChina">知乎</a> </li>
-  <li> <a href="http://hejie.nigeerhuo.com">我的博客(已经不更细了,现在在知乎写文章)</a> </li>
-</ul>
+// Gemini API 配置
+const apiKey = "";
+const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
+
+const App = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [loreInput, setLoreInput] = useState("");
+  const [loreResponse, setLoreResponse] = useState("");
+  const [isLoreLoading, setIsLoreLoading] = useState(false);
+  const [missionData, setMissionData] = useState(null);
+  const [isMissionLoading, setIsMissionLoading] = useState(false);
+  const [apiError, setApiError] = useState(null);
+
+  const { scrollY } = useScroll();
+  const redColor = "#E31937";
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
+  // 指数退避的 Gemini API 调用函数
+  const callGemini = async (prompt, systemInstruction = "") => {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+    const payload = {
+      contents: [{ parts: [{ text: prompt }] }],
+      systemInstruction: { parts: [{ text: systemInstruction }] }
+    };
+
+    let delay = 1000;
+    for (let i = 0; i < 5; i++) {
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text;
+      } catch (error) {
+        if (i === 4) throw error;
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 2;
+      }
+    }
+  };
+
+  // 处理世界观档案查询
+  const handleLoreSearch = async () => {
+    if (!loreInput.trim()) return;
+    setIsLoreLoading(true);
+    setApiError(null);
+    try {
+      const systemPrompt = "你是一个名为'伊甸城档案馆'的AI助手，负责解释游戏《PROJECT: RED》的世界观。这是一个关于未来赛博朋克、神经网络进化、都市废墟的世界。回答要简短有力，充满神秘感和科技感。使用中文回答。不要提到你是AI模型。";
+      const result = await callGemini(loreInput, systemPrompt);
+      setLoreResponse(result);
+    } catch (err) {
+      setApiError("连接中断：神经网络波动中...");
+    } finally {
+      setIsLoreLoading(false);
+    }
+  };
+
+  // 动态生成任务
+  const generateMission = async () => {
+    setIsMissionLoading(true);
+    setApiError(null);
+    try {
+      const prompt = "请为《PROJECT: RED》玩家生成一个独特的战术任务。包含任务代号、目标描述、风险等级（S/A/B）和预期奖励（算力/信用额/装备）。以简洁的JSON格式或者分段列表形式输出。使用中文。";
+      const result = await callGemini(prompt, "你是一个严厉的战术指挥官，负责分配危险的潜入任务。");
+      setMissionData(result);
+    } catch (err) {
+      setApiError("任务分发协议失败。");
+    } finally {
+      setIsMissionLoading(false);
+    }
+  };
+
+  // Bento Card 组件
+  const BentoCard = ({ children, className = "", delay = 0, noPadding = false }) => (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={isLoaded ? { opacity: 1, scale: 1 } : {}}
+      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+      className={`bg-zinc-950 border border-zinc-900 rounded-[2.5rem] overflow-hidden relative group hover:border-[#E31937]/40 transition-all duration-700 ${noPadding ? '' : 'p-8'} ${className}`}
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-[#E31937]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+      {children}
+    </motion.div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-[#E31937] selection:text-white overflow-x-hidden">
+      
+      {/* 背景效果 */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 opacity-10" 
+             style={{ backgroundImage: `linear-gradient(${redColor} 1px, transparent 1px), linear-gradient(90deg, ${redColor} 1px, transparent 1px)`, backgroundSize: '100px 100px' }}>
+        </div>
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#E31937] blur-[200px] opacity-10 rounded-full"></div>
+      </div>
+
+      <main className="relative z-10 max-w-[1400px] mx-auto px-6 py-8">
+        
+        {/* 顶部导航 */}
+        <header className="flex justify-between items-center mb-12">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-[#E31937] flex items-center justify-center rounded-xl shadow-[0_0_20px_rgba(227,25,55,0.4)]">
+              <Skull fill="white" size={24} />
+            </div>
+            <span className="text-xl font-black tracking-widest font-mono">P:RED</span>
+          </div>
+          <nav className="hidden lg:flex items-center gap-12 text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-500">
+            {['档案', '数据库', '军械库', '接入'].map((item, i) => (
+              <a key={i} href="#" className="hover:text-white hover:tracking-[0.4em] transition-all duration-300">{item} / <span className="text-zinc-700">ENTER</span></a>
+            ))}
+          </nav>
+          <div className="flex gap-4">
+             {apiError && (
+               <div className="hidden md:flex items-center gap-2 text-[#E31937] text-[10px] font-mono animate-pulse">
+                 <AlertCircle size={14} /> {apiError}
+               </div>
+             )}
+             <button className="px-6 py-2 border border-[#E31937] text-[#E31937] rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-[#E31937] hover:text-white transition-all">
+                加入协议
+             </button>
+          </div>
+        </header>
+
+        {/* Bento 网格布局 */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 auto-rows-[160px]">
+          
+          {/* 主视觉区域 */}
+          <BentoCard className="md:col-span-8 md:row-span-3 bg-black flex flex-col justify-end" noPadding>
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-[2s]"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+            
+            <div className="relative p-12 space-y-4">
+               <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5 }}>
+                 <span className="text-[#E31937] font-mono text-sm tracking-widest uppercase mb-4 block underline decoration-2 underline-offset-8 italic">Episode 01: The Breach</span>
+                 <h1 className="text-6xl md:text-8xl font-black leading-none tracking-tighter uppercase italic">
+                   赤红 <span className="text-[#E31937]">觉醒</span>
+                 </h1>
+                 <p className="text-zinc-400 font-mono text-xs mt-4 tracking-widest underline decoration-zinc-800 underline-offset-4">PROJECT RED // GLOBAL ACCESS PROTOCOL ENABLED</p>
+               </motion.div>
+               <div className="flex gap-4 pt-4">
+                 <button className="bg-white text-black px-8 py-3 rounded-full font-black flex items-center gap-2 hover:bg-[#E31937] hover:text-white transition-colors">
+                   <Play size={18} fill="currentColor" /> 观看预告片
+                 </button>
+               </div>
+            </div>
+          </BentoCard>
+
+          {/* AI Lore Terminal (Gemini Integration) */}
+          <BentoCard className="md:col-span-4 md:row-span-3 flex flex-col bg-zinc-900/50 border-[#E31937]/20">
+             <div className="flex items-center gap-3 mb-6">
+                <Sparkles className="text-[#E31937]" size={20} />
+                <div>
+                   <h3 className="text-xl font-black italic">✨神经网络终端</h3>
+                   <p className="text-[9px] text-zinc-500 font-mono uppercase tracking-widest">Neural Archive Interface</p>
+                </div>
+             </div>
+             
+             <div className="flex-1 overflow-y-auto mb-4 scrollbar-hide">
+                {loreResponse ? (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs font-mono text-zinc-300 leading-relaxed space-y-2">
+                     <div className="text-[#E31937] opacity-60">档案摘要 // SUMMARY:</div>
+                     {loreResponse}
+                  </motion.div>
+                ) : (
+                  <div className="text-[10px] text-zinc-600 font-mono italic">
+                    输入关键字查询世界观档案，例如“伊甸城历史”、“进化协议”...
+                  </div>
+                )}
+             </div>
+
+             <div className="relative mt-auto">
+                <input 
+                  type="text" 
+                  value={loreInput}
+                  onChange={(e) => setLoreInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleLoreSearch()}
+                  placeholder="接入档案..."
+                  className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-xs font-mono focus:border-[#E31937] outline-none transition-colors pr-12"
+                />
+                <button 
+                  onClick={handleLoreSearch}
+                  disabled={isLoreLoading}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[#E31937] hover:scale-110 transition-transform disabled:opacity-30"
+                >
+                  {isLoreLoading ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />}
+                </button>
+             </div>
+          </BentoCard>
+
+          {/* AI Mission Generator (Gemini Integration) */}
+          <BentoCard className="md:col-span-4 md:row-span-3 flex flex-col justify-between overflow-hidden">
+             <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                <Terminal size={120} />
+             </div>
+             
+             <div>
+                <h3 className="text-3xl font-black italic uppercase mb-1">战术任务</h3>
+                <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest">Dynamic Tactical Dispatch</p>
+             </div>
+
+             <div className="bg-black/50 border border-zinc-800 rounded-2xl p-4 min-h-[140px] flex flex-col justify-center">
+                {isMissionLoading ? (
+                  <div className="flex flex-col items-center gap-3 py-4">
+                     <Loader2 className="animate-spin text-[#E31937]" size={24} />
+                     <span className="text-[10px] font-mono text-zinc-600 animate-pulse">正在从神经网络获取任务...</span>
+                  </div>
+                ) : missionData ? (
+                  <motion.pre initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[10px] font-mono text-zinc-400 whitespace-pre-wrap leading-tight">
+                    {missionData}
+                  </motion.pre>
+                ) : (
+                  <div className="text-center text-zinc-700 py-6">
+                    <Zap size={32} className="mx-auto mb-2 opacity-20" />
+                    <p className="text-[10px] font-mono uppercase">等待指挥官授权...</p>
+                  </div>
+                )}
+             </div>
+
+             <button 
+               onClick={generateMission}
+               disabled={isMissionLoading}
+               className="w-full mt-4 bg-zinc-900 hover:bg-[#E31937] py-3 rounded-xl font-black italic text-xs transition-all flex items-center justify-center gap-2 group"
+             >
+               ✨生成每日挑战 GENERATE
+               <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+             </button>
+          </BentoCard>
+
+          {/* 角色卡片 */}
+          <BentoCard className="md:col-span-4 md:row-span-2 bg-gradient-to-br from-zinc-900 to-black p-0 overflow-hidden" noPadding>
+            <div className="p-8 h-full flex flex-col justify-between relative z-10">
+              <div>
+                <span className="text-[10px] font-mono text-[#E31937] mb-2 block uppercase tracking-tighter italic">Subject: 09-KIRA</span>
+                <h4 className="text-3xl font-black italic uppercase">精神内核系数</h4>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-end">
+                   <span className="text-[10px] text-zinc-500 uppercase">Synchronization / 同步率</span>
+                   <span className="text-2xl font-black italic">98.2%</span>
+                </div>
+                <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden">
+                   <motion.div initial={{ width: 0 }} animate={{ width: "98.2%" }} transition={{ duration: 2 }} className="h-full bg-[#E31937]" />
+                </div>
+              </div>
+            </div>
+            <svg className="absolute bottom-[-20px] right-[-20px] w-48 h-48 opacity-10 pointer-events-none" viewBox="0 0 100 100">
+               <path d="M50 10 L90 90 L10 90 Z" fill="none" stroke={redColor} strokeWidth="0.5" />
+               <circle cx="50" cy="50" r="30" fill="none" stroke={redColor} strokeWidth="0.5" strokeDasharray="2 2" />
+            </svg>
+          </BentoCard>
+
+          {/* 数据与统计 */}
+          <BentoCard className="md:col-span-4 md:row-span-1 flex items-center justify-between group cursor-pointer">
+            <div className="flex items-center gap-4">
+              <Users className="text-[#E31937]" />
+              <div className="flex flex-col">
+                <span className="text-xl font-black leading-none tracking-tighter">3,401,922</span>
+                <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">活跃驾驶员</span>
+              </div>
+            </div>
+            <ArrowRight className="opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all" />
+          </BentoCard>
+
+          {/* 世界卖点展示 */}
+          <BentoCard className="md:col-span-8 md:row-span-2 flex flex-col justify-center relative overflow-hidden bg-zinc-950/80">
+             <div className="absolute top-0 right-0 w-full h-full opacity-[0.05] pointer-events-none">
+                <svg width="100%" height="100%" viewBox="0 0 800 400" className="stroke-[#E31937]">
+                  <path d="M0 200 Q 200 100 400 200 T 800 200" fill="none" strokeWidth="1" />
+                  <circle cx="400" cy="200" r="150" fill="none" strokeWidth="0.5" strokeDasharray="5 5" />
+                </svg>
+             </div>
+             <div className="relative z-10 flex flex-col md:flex-row items-end justify-between gap-8">
+               <div className="max-w-md">
+                 <h4 className="text-4xl font-black italic uppercase mb-4">伊甸之城: <span className="text-[#E31937]">无缝核心</span></h4>
+                 <p className="text-zinc-500 text-[10px] leading-relaxed uppercase tracking-widest font-bold">
+                   Explore a seamless open world spanning 400 square kilometers of vertical urban decay.
+                   探索面积达400平方公里的无缝开放世界，从垂直的都市废墟到神经网络花园。
+                 </p>
+               </div>
+               <div className="flex flex-col items-end">
+                  <span className="text-6xl font-black italic text-[#E31937] leading-none">400km²</span>
+                  <span className="text-[10px] font-mono text-zinc-600">UNRESTRICTED ACCESS</span>
+               </div>
+             </div>
+          </BentoCard>
+
+          {/* 底部功能区域 */}
+          <BentoCard className="md:col-span-4 md:row-span-2 p-12 bg-[#E31937]">
+             <div className="h-full flex flex-col justify-between text-black">
+                <Layers size={48} strokeWidth={2.5} />
+                <div>
+                   <h4 className="text-4xl font-black leading-tight italic uppercase mb-4">格斗 <br/>重塑</h4>
+                   <p className="text-[10px] font-bold leading-relaxed opacity-80 uppercase tracking-tighter">
+                     A revolutionary combat system. 
+                     无缝切换格斗形态，定义下个时代的动作基准。
+                   </p>
+                </div>
+                <div className="pt-6 border-t border-black/20 flex justify-between items-center">
+                   <span className="text-xs font-black uppercase">战斗机制</span>
+                   <div className="w-10 h-10 rounded-full border border-black flex items-center justify-center">
+                     <ChevronRight size={20} />
+                   </div>
+                </div>
+             </div>
+          </BentoCard>
+
+        </div>
+
+        {/* 底部召集行动 */}
+        <section className="mt-20 py-20 border-y border-zinc-900 flex flex-col items-center text-center">
+           <motion.div initial={{ scale: 0.9, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: 1 }}>
+              <h2 className="text-7xl md:text-[10rem] font-black italic tracking-tighter uppercase leading-none mb-12">
+                JOIN THE <span className="text-[#E31937]">RED</span>
+              </h2>
+           </motion.div>
+           <div className="flex flex-wrap justify-center gap-6">
+              <button className="px-12 py-5 bg-[#E31937] text-white font-black text-xl italic uppercase rounded-2xl shadow-[0_20px_40px_rgba(227,25,55,0.3)] hover:scale-105 transition-transform">
+                立即预购 PRE-ORDER
+              </button>
+              <button className="px-12 py-5 border border-zinc-700 text-zinc-400 font-black text-xl italic uppercase rounded-2xl hover:border-white hover:text-white transition-all">
+                加入社区 DISCORD
+              </button>
+           </div>
+        </section>
+
+        {/* 页脚 */}
+        <footer className="mt-20 pb-12 flex flex-col md:flex-row justify-between items-end gap-12">
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="w-8 h-8 bg-zinc-800 flex items-center justify-center rounded-lg">
+                <Skull size={18} />
+              </div>
+              <span className="text-sm font-black tracking-widest">PROJECT: RED</span>
+            </div>
+            <p className="max-w-sm text-zinc-600 text-[10px] leading-relaxed uppercase tracking-[0.2em] font-bold">
+              Red Project is a trademark of NEXUS INTERACTIVE. Developed by KRONOS STUDIOS. 
+              All other trademarks and trade names are the properties of their respective owners.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+             {['法律声明', '最终协议', '媒体素材', '技术支持'].map(item => (
+               <a key={item} href="#" className="text-[10px] font-bold text-zinc-500 hover:text-[#E31937] uppercase tracking-widest transition-colors underline decoration-zinc-900">{item}</a>
+             ))}
+          </div>
+        </footer>
+
+      </main>
+
+      {/* 全局样式细节 */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body {
+          font-family: 'Inter', sans-serif;
+          cursor: crosshair;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}} />
+    </div>
+  );
+};
+
+export default App;
