@@ -117,11 +117,9 @@
             font-weight: 900;
         }
 
-        .glow-dot {
-            width: 12px; height: 12px;
-            background: #6000ff;
-            border-radius: 50%;
-            box-shadow: 0 0 20px #6000ff, 0 0 40px #6000ff;
+        /* 针对图标增加的发光样式 */
+        .icon-glow {
+            filter: drop-shadow(0 0 8px #6000ff);
         }
 
         .progress-bar {
@@ -197,7 +195,10 @@
     <!-- 导航栏 -->
     <nav class="flex justify-between items-center mb-16 max-w-7xl mx-auto">
         <div class="flex items-center gap-4">
-            <div class="glow-dot animate-pulse"></div>
+            <!-- 左上角小图标：现在改为月亮图标，你可以随时更改 i 标签的 class -->
+            <div class="flex items-center justify-center">
+                <i class="fa-solid fa-moon text-primary text-2xl animate-pulse icon-glow"></i>
+            </div>
             <span class="font-black tracking-tighter text-2xl italic">MOONLIGHT</span>
         </div>
         <div class="flex gap-10 items-center">
@@ -302,7 +303,7 @@
 
             <!-- 会长卡片 -->
             <div class="bento-card md:col-span-1 p-8 flex flex-col justify-end group">
-                <div class="absolute top-0 right-0 p-6 opacity-5">
+                <div class="absolute top-0 right-0 p-6 opacity-10">
                     <i class="fa-solid fa-crown text-6xl"></i>
                 </div>
                 <div class="relative z-10">
@@ -401,11 +402,11 @@
                     </div>
                 </div>
                 <div class="hidden md:block opacity-10">
-                    <i class="fa-solid fa-microchip text-6xl"></i>
+                    <i class="fa-solid fa-microchip text-6xl icon-glow"></i>
                 </div>
             </div>
 
-            <!-- 本地时间模块 / 右下角位置贴合 -->
+            <!-- 本地时间模块 -->
             <div class="bento-card md:col-span-2 p-10 flex flex-col justify-center items-center group relative overflow-hidden">
                 <div class="scanline"></div>
                 <div class="absolute top-6 left-8 flex items-center gap-3">
@@ -416,7 +417,7 @@
                     </div>
                 </div>
                 
-                <div class="relative py-4">
+                <div class="relative py-4 text-center">
                     <div id="local-time" class="clock-text font-black tracking-tighter text-white/90">00:00:00</div>
                     <div class="flex justify-between items-center mt-2 px-1">
                         <span class="text-[8px] opacity-20 font-mono tracking-widest">UTC+0800 / SYNCED</span>
@@ -519,13 +520,19 @@
             const seconds = String(now.getSeconds()).padStart(2, '0');
             const ms = String(now.getMilliseconds()).padStart(3, '0');
             
-            document.getElementById('local-time').innerText = `${hours}:${minutes}:${seconds}`;
-            document.getElementById('clock-ms').innerText = `${ms} MS`;
+            const timeEl = document.getElementById('local-time');
+            if(timeEl) timeEl.innerText = `${hours}:${minutes}:${seconds}`;
             
-            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-            document.getElementById('current-date').innerText = now.toLocaleDateString('zh-CN', options);
+            const msEl = document.getElementById('clock-ms');
+            if(msEl) msEl.innerText = `${ms} MS`;
+            
+            const dateEl = document.getElementById('current-date');
+            if(dateEl) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+                dateEl.innerText = now.toLocaleDateString('zh-CN', options);
+            }
         }
-        setInterval(updateTime, 1); // 高频刷新毫秒显示
+        setInterval(updateTime, 1); 
         updateTime();
 
         // --- YouTube 与 UI 逻辑 ---
@@ -558,22 +565,24 @@
             const toggleText = document.getElementById('toggle-text');
             const bars = document.querySelectorAll('.bar');
 
-            toggleBtn.addEventListener('click', () => {
-                if (!isPlaying) {
-                    player.unMute();
-                    player.setVolume(100);
-                    player.playVideo();
-                    toggleIcon.classList.replace('fa-play', 'fa-pause');
-                    toggleText.innerText = '暂停播放';
-                    bars.forEach(bar => bar.classList.add('bar-animate'));
-                } else {
-                    player.pauseVideo();
-                    toggleIcon.classList.replace('fa-pause', 'fa-play');
-                    toggleText.innerText = '恢复播放';
-                    bars.forEach(bar => bar.classList.remove('bar-animate'));
-                }
-                isPlaying = !isPlaying;
-            });
+            if(toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    if (!isPlaying) {
+                        player.unMute();
+                        player.setVolume(100);
+                        player.playVideo();
+                        toggleIcon.classList.replace('fa-play', 'fa-pause');
+                        toggleText.innerText = '暂停播放';
+                        bars.forEach(bar => bar.classList.add('bar-animate'));
+                    } else {
+                        player.pauseVideo();
+                        toggleIcon.classList.replace('fa-pause', 'fa-play');
+                        toggleText.innerText = '恢复播放';
+                        bars.forEach(bar => bar.classList.remove('bar-animate'));
+                    }
+                    isPlaying = !isPlaying;
+                });
+            }
         }
 
         window.onload = () => {
@@ -587,34 +596,36 @@
             }
 
             const ctxChart = document.getElementById('winRateChart').getContext('2d');
-            const grad = ctxChart.createLinearGradient(0, 0, 0, 120);
-            grad.addColorStop(0, 'rgba(96, 0, 255, 0.8)');
-            grad.addColorStop(1, 'rgba(96, 0, 255, 0)');
+            if(ctxChart) {
+                const grad = ctxChart.createLinearGradient(0, 0, 0, 120);
+                grad.addColorStop(0, 'rgba(96, 0, 255, 0.8)');
+                grad.addColorStop(1, 'rgba(96, 0, 255, 0)');
 
-            new Chart(ctxChart, {
-                type: 'line',
-                data: {
-                    labels: ['S1', 'S2', 'S3', 'S4', 'S5'],
-                    datasets: [{
-                        data: [100, 100, 100, 100, 100], 
-                        borderColor: '#6000ff',
-                        borderWidth: 6,
-                        pointRadius: 0,
-                        tension: 0, 
-                        fill: true,
-                        backgroundColor: grad,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { display: false },
-                        y: { display: false, min: 0, max: 120 }
+                new Chart(ctxChart, {
+                    type: 'line',
+                    data: {
+                        labels: ['S1', 'S2', 'S3', 'S4', 'S5'],
+                        datasets: [{
+                            data: [100, 100, 100, 100, 100], 
+                            borderColor: '#6000ff',
+                            borderWidth: 6,
+                            pointRadius: 0,
+                            tension: 0, 
+                            fill: true,
+                            backgroundColor: grad,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { display: false },
+                            y: { display: false, min: 0, max: 120 }
+                        }
                     }
-                }
-            });
+                });
+            }
         };
     </script>
 </body>
