@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>月光 | MOONLIGHT</title>
+    <title>月光 | MOONLIGHT GUILD</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -14,6 +14,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Motion -->
     <script src="https://cdn.jsdelivr.net/npm/motion@10.16.2/dist/motion.js"></script>
+    <!-- YouTube API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
         tailwind.config = {
@@ -27,6 +29,10 @@
                     fontFamily: {
                         sans: ['Noto Sans SC', 'Inter', 'sans-serif'],
                     },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
                 }
             }
         }
@@ -42,6 +48,17 @@
             color: #ffffff;
             overflow-x: hidden;
             position: relative;
+        }
+
+        /* 鼠标粒子 Canvas 样式 */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
         }
 
         /* 动态氛围背景 */
@@ -121,15 +138,61 @@
             box-shadow: 0 0 10px #6000ff;
         }
 
+        /* 频谱条动画 */
+        .bar {
+            width: 3px;
+            background: #6000ff;
+            border-radius: 2px;
+            transition: height 0.2s ease;
+        }
+        .bar-animate {
+            animation: bounce 1.2s ease-in-out infinite alternate;
+        }
+        @keyframes bounce {
+            from { height: 4px; }
+            to { height: 24px; }
+        }
+
         /* 隐藏滚动条 */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #6000ff; border-radius: 10px; }
+
+        #yt-player {
+            position: absolute;
+            width: 1px; height: 1px;
+            pointer-events: none;
+            opacity: 0.01;
+            bottom: 0; right: 0;
+        }
+        
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 5;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(96, 0, 255, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+            position: absolute;
+            bottom: 100%;
+            animation: scan 4s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scan {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
+
+        .clock-text {
+            font-size: clamp(3rem, 10vw, 6rem);
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
     </style>
 </head>
 <body class="p-6 md:p-12 font-sans">
+    <canvas id="particle-canvas"></canvas>
     <div class="ambient-bg"></div>
     <div class="bg-noise"></div>
+    <div id="yt-player"></div>
 
     <!-- 导航栏 -->
     <nav class="flex justify-between items-center mb-16 max-w-7xl mx-auto">
@@ -158,20 +221,20 @@
                 </div>
 
                 <div class="relative z-10">
-                    <p class="text-primary text-sm tracking-[0.5em] mb-8 uppercase font-black">Project Moonlight / 2023</p>
-                    <h1 class="text-5xl md:text-8xl font-black mb-8 leading-[0.85] tracking-tighter">
+                    <p class="text-primary text-sm tracking-[0.5em] mb-8 uppercase font-black">Elite Gaming Guild / 始于2023</p>
+                    <h1 class="text-6xl md:text-9xl font-black mb-8 leading-[0.85] tracking-tighter">
                         月光<br><span class="text-primary group-hover:tracking-wider transition-all duration-1000">MOONLIGHT</span><br>
-                        <span class="text-3xl md:text-5xl opacity-20 block mt-4 font-light">BEYOND THE HORIZON</span>
+                        <span class="text-2xl md:text-4xl opacity-20 block mt-4 font-light tracking-[0.2em]">BEYOND THE HORIZON</span>
                     </h1>
                     <div class="flex items-center gap-6 opacity-30 group-hover:opacity-100 transition-opacity">
                         <div class="h-[1px] w-20 bg-white"></div>
-                        <p class="text-xs tracking-[0.3em] uppercase font-bold">Uncompromising quality in every frame.</p>
+                        <p class="text-xs tracking-[0.3em] uppercase font-bold text-white/50 group-hover:text-white transition-colors">We keep winning, we never lose.</p>
                     </div>
                 </div>
             </div>
 
             <!-- Discord 实时面板 -->
-            <div class="bento-card md:col-span-1 md:row-span-3 flex flex-col bg-black overflow-hidden border-primary/20">
+            <div class="bento-card md:col-span-1 md:row-span-3 flex flex-col bg-black overflow-hidden border-primary/20 shadow-2xl">
                 <div class="p-6 flex justify-between items-center border-b border-white/5 bg-white/5">
                     <div>
                         <h3 class="text-xs font-black uppercase tracking-widest text-primary">Neural Network</h3>
@@ -188,27 +251,52 @@
                 </div>
             </div>
 
-            <!-- 项目进度卡片 -->
+            <!-- 发展进度卡片 -->
             <div class="bento-card md:col-span-2 p-10 flex flex-col justify-between group">
                 <div>
-                    <h3 class="text-2xl font-black mb-2">开发进度 / STATUS</h3>
-                    <p class="text-xs opacity-40 uppercase tracking-widest font-bold">Moonlight Lightless - Dev Build v0.8</p>
+                    <h3 class="text-2xl font-black mb-2">公会建设 / STATUS</h3>
+                    <p class="text-xs opacity-40 uppercase tracking-widest font-bold">Moonlight Infrastructure - v2.4</p>
                 </div>
                 <div class="mt-8 space-y-6">
                     <div>
                         <div class="flex justify-between text-[10px] mb-2 uppercase tracking-widest font-bold">
-                            <span>Engine Architecture / 引擎底层</span>
+                            <span>Guild Architecture / 公会底层</span>
                             <span class="text-primary">94%</span>
                         </div>
                         <div class="progress-bar"><div class="progress-inner" style="width: 94%"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-[10px] mb-2 uppercase tracking-widest font-bold">
-                            <span>Visual Assets / 视觉美术</span>
-                            <span class="text-primary">72%</span>
+                            <span>Visual Identity / 视觉识别系统</span>
+                            <span class="text-primary">88%</span>
                         </div>
-                        <div class="progress-bar"><div class="progress-inner" style="width: 72%"></div></div>
+                        <div class="progress-bar"><div class="progress-inner" style="width: 88%"></div></div>
                     </div>
+                </div>
+            </div>
+
+            <!-- 音乐播放板块 -->
+            <div class="bento-card md:col-span-1 p-8 flex flex-col justify-between group">
+                <div class="flex justify-between items-start">
+                    <div class="bg-primary/20 p-3 rounded-2xl group-hover:bg-primary/40 transition-colors">
+                        <i class="fa-solid fa-music text-primary"></i>
+                    </div>
+                    <div class="flex gap-1 mt-3" id="visualizer">
+                        <div class="bar bar-animate" style="animation-delay: 0s"></div>
+                        <div class="bar bar-animate" style="animation-delay: 0.2s"></div>
+                        <div class="bar bar-animate" style="animation-delay: 0.4s"></div>
+                        <div class="bar bar-animate" style="animation-delay: 0.1s"></div>
+                        <div class="bar bar-animate" style="animation-delay: 0.3s"></div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-primary text-[10px] tracking-[0.3em] uppercase mb-1 font-black">Atmosphere</p>
+                    <h3 class="text-xl font-black mb-4">有我 - Moonlight</h3>
+                    <button id="music-toggle" class="flex items-center gap-3 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl border border-white/5 transition-all text-xs font-bold w-full justify-center">
+                        <i class="fa-solid fa-play" id="toggle-icon"></i>
+                        <span id="toggle-text">播放音乐</span>
+                    </button>
+                    <p id="music-hint" class="text-[8px] opacity-20 text-center mt-2 uppercase">需要手动点击以解除浏览器静音</p>
                 </div>
             </div>
 
@@ -219,16 +307,18 @@
                 </div>
                 <div class="relative z-10">
                     <p class="text-primary text-[10px] tracking-[0.4em] uppercase mb-2 font-black">Commander</p>
-                    <h2 class="text-6xl font-black group-hover:scale-105 transition-transform origin-left">乐生</h2>
+                    <h2 class="text-6xl font-black group-hover:scale-105 transition-transform origin-left text-white/90">乐生</h2>
                     <p class="text-[9px] opacity-30 uppercase tracking-widest mt-2">Visionary & Founder</p>
                 </div>
             </div>
 
             <!-- 公会理念卡片 -->
-            <div class="bento-card md:col-span-1 p-8 flex flex-col justify-between bg-gradient-to-br from-card to-black">
-                <p class="text-xs leading-relaxed opacity-60 font-light">
-                    “我们不追求平庸的胜利。在月光的笼罩下，每一个项目、每一场对局都必须是极致的艺术展现。独立、自由、且不可战胜。”
-                </p>
+            <div class="bento-card md:col-span-1 p-8 flex flex-col justify-between group bg-gradient-to-br from-card to-black">
+                <div class="relative">
+                    <p class="text-2xl font-black leading-tight tracking-tighter group-hover:text-primary transition-colors duration-500">
+                        WE KEEP WINNING<br>WE NEVER LOSE
+                    </p>
+                </div>
                 <div class="mt-4 pt-4 border-t border-white/5">
                     <span class="text-primary text-[10px] font-black uppercase tracking-widest">Philosophy / 公会精神</span>
                 </div>
@@ -241,7 +331,7 @@
                         <h3 class="text-4xl font-black tracking-tighter">荣誉巅峰</h3>
                         <p class="text-[10px] opacity-20 uppercase tracking-[0.3em] mt-2 italic">The Hall of Supremacy</p>
                     </div>
-                    <div class="text-primary text-4xl font-black italic opacity-20 group-hover:opacity-100 transition-opacity">02</div>
+                    <div class="text-primary text-4xl font-black italic opacity-20 group-hover:opacity-100 transition-opacity">RANKED</div>
                 </div>
                 
                 <div class="space-y-10 flex-grow">
@@ -255,6 +345,13 @@
                     <div class="flex items-center gap-10 group/item">
                         <div class="text-5xl font-black outline-text opacity-20 group-hover/item:opacity-100 transition-all">02</div>
                         <div class="flex flex-col">
+                            <span class="text-xl font-black group-hover/item:translate-x-3 transition-transform text-white/90">独立游戏：月光光脱光光</span>
+                            <span class="text-[11px] opacity-30 uppercase tracking-[0.2em] mt-2 font-bold text-primary">EXCLUSIVE PROJECT</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-10 group/item">
+                        <div class="text-5xl font-black outline-text opacity-20 group-hover/item:opacity-100 transition-all">03</div>
+                        <div class="flex flex-col">
                             <span class="text-xl font-black group-hover/item:translate-x-3 transition-transform text-white/90">CS2 优先最快上分车</span>
                             <span class="text-[11px] opacity-30 uppercase tracking-[0.2em] mt-2 font-bold text-primary">Unrivaled Efficiency</span>
                         </div>
@@ -262,7 +359,7 @@
                 </div>
             </div>
 
-            <!-- 加入按钮 (增强版) -->
+            <!-- 加入按钮 -->
             <a href="https://discord.gg/BHuFeUP3" target="_blank" class="bento-card md:col-span-1 md:row-span-1 p-8 flex flex-col justify-between bg-primary text-white border-none cursor-pointer group shadow-2xl shadow-primary/40 overflow-hidden transition-all duration-500 hover:-rotate-1">
                 <div class="bg-black/20 w-16 h-16 rounded-3xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-500">
                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
@@ -292,19 +389,44 @@
                 </div>
             </div>
 
-            <!-- 技术栈卡片 (新增) -->
+            <!-- 技术栈卡片 -->
             <div class="bento-card md:col-span-2 p-10 flex items-center justify-between">
                 <div>
-                    <h3 class="text-sm font-black uppercase tracking-[0.3em] text-primary mb-4">Tech Stack / 技术栈</h3>
+                    <h3 class="text-sm font-black uppercase tracking-[0.3em] text-primary mb-4">Core Focus / 核心领域</h3>
                     <div class="flex flex-wrap gap-4 text-[10px] font-bold opacity-40">
-                        <span class="px-3 py-1 border border-white/10 rounded-full">UNREAL ENGINE 5</span>
-                        <span class="px-3 py-1 border border-white/10 rounded-full">C++ / BLUEPRINT</span>
-                        <span class="px-3 py-1 border border-white/10 rounded-full">BLENDER 4.0</span>
-                        <span class="px-3 py-1 border border-white/10 rounded-full">SUBSTANCE</span>
+                        <span class="px-3 py-1 border border-white/10 rounded-full">FPS COMPETITIVE</span>
+                        <span class="px-3 py-1 border border-white/10 rounded-full">GLOBAL RANKING</span>
+                        <span class="px-3 py-1 border border-white/10 rounded-full">COMMUNITY DEV</span>
+                        <span class="px-3 py-1 border border-white/10 rounded-full">GAME ANALYTICS</span>
                     </div>
                 </div>
                 <div class="hidden md:block opacity-10">
                     <i class="fa-solid fa-microchip text-6xl"></i>
+                </div>
+            </div>
+
+            <!-- 本地时间模块 / 右下角位置贴合 -->
+            <div class="bento-card md:col-span-2 p-10 flex flex-col justify-center items-center group relative overflow-hidden">
+                <div class="scanline"></div>
+                <div class="absolute top-6 left-8 flex items-center gap-3">
+                    <div class="w-2 h-2 rounded-full bg-primary animate-ping"></div>
+                    <div>
+                        <h3 class="text-xs font-black uppercase tracking-[0.2em]">系统时间 / LOCAL CLOCK</h3>
+                        <p id="current-date" class="text-[9px] opacity-30 uppercase font-bold tracking-widest mt-0.5">---</p>
+                    </div>
+                </div>
+                
+                <div class="relative py-4">
+                    <div id="local-time" class="clock-text font-black tracking-tighter text-white/90">00:00:00</div>
+                    <div class="flex justify-between items-center mt-2 px-1">
+                        <span class="text-[8px] opacity-20 font-mono tracking-widest">UTC+0800 / SYNCED</span>
+                        <span class="text-[8px] opacity-20 font-mono tracking-widest" id="clock-ms">000 MS</span>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-6 right-8 text-right opacity-10">
+                    <p class="text-[8px] font-mono leading-none">SERVER_LOC: NORTH_AMERICA</p>
+                    <p class="text-[8px] font-mono leading-none mt-1">STATUS: OPERATIONAL</p>
                 </div>
             </div>
 
@@ -326,26 +448,150 @@
     </main>
 
     <script>
+        // --- 鼠标粒子交互系统 ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                this.color = '#6000ff';
+                this.alpha = 1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.alpha > 0.02) this.alpha -= 0.02;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function handleParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].alpha <= 0.02) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            for (let i = 0; i < 3; i++) {
+                particles.push(new Particle(e.x, e.y));
+            }
+        });
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            handleParticles();
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // --- 系统时间更新逻辑 ---
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ms = String(now.getMilliseconds()).padStart(3, '0');
+            
+            document.getElementById('local-time').innerText = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('clock-ms').innerText = `${ms} MS`;
+            
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            document.getElementById('current-date').innerText = now.toLocaleDateString('zh-CN', options);
+        }
+        setInterval(updateTime, 1); // 高频刷新毫秒显示
+        updateTime();
+
+        // --- YouTube 与 UI 逻辑 ---
+        let player;
+        let isPlaying = false;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player', {
+                height: '0',
+                width: '0',
+                videoId: 'tTgdQwXacps', 
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'showinfo': 0,
+                    'modestbranding': 1,
+                    'loop': 1,
+                    'enablejsapi': 1,
+                    'origin': window.location.origin
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            const toggleBtn = document.getElementById('music-toggle');
+            const toggleIcon = document.getElementById('toggle-icon');
+            const toggleText = document.getElementById('toggle-text');
+            const bars = document.querySelectorAll('.bar');
+
+            toggleBtn.addEventListener('click', () => {
+                if (!isPlaying) {
+                    player.unMute();
+                    player.setVolume(100);
+                    player.playVideo();
+                    toggleIcon.classList.replace('fa-play', 'fa-pause');
+                    toggleText.innerText = '暂停播放';
+                    bars.forEach(bar => bar.classList.add('bar-animate'));
+                } else {
+                    player.pauseVideo();
+                    toggleIcon.classList.replace('fa-pause', 'fa-play');
+                    toggleText.innerText = '恢复播放';
+                    bars.forEach(bar => bar.classList.remove('bar-animate'));
+                }
+                isPlaying = !isPlaying;
+            });
+        }
+
         window.onload = () => {
             if (typeof motion !== 'undefined') {
                 const { animate, stagger } = motion;
-                
-                // 入场动画
                 animate(".bento-card", 
                     { opacity: [0, 1], y: [60, 0], scale: [0.98, 1] }, 
                     { duration: 1.2, delay: stagger(0.06), easing: [0.16, 1, 0.3, 1] }
                 );
-
                 animate("nav", { opacity: [0, 1], y: [-20, 0] }, { duration: 1 });
             }
 
-            // 图表初始化
-            const ctx = document.getElementById('winRateChart').getContext('2d');
-            const grad = ctx.createLinearGradient(0, 0, 0, 120);
+            const ctxChart = document.getElementById('winRateChart').getContext('2d');
+            const grad = ctxChart.createLinearGradient(0, 0, 0, 120);
             grad.addColorStop(0, 'rgba(96, 0, 255, 0.8)');
             grad.addColorStop(1, 'rgba(96, 0, 255, 0)');
 
-            new Chart(ctx, {
+            new Chart(ctxChart, {
                 type: 'line',
                 data: {
                     labels: ['S1', 'S2', 'S3', 'S4', 'S5'],
