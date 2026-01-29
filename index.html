@@ -3,278 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CODE: RED | 官方网页</title>
+    <title>MOONLIGHT | 游戏公会</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 修复 Framer Motion 报错：必须先引入 React 依赖 -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Framer Motion -->
-    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Inter:wght@400;600;900&display=swap');
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Motion (Vanilla JS version of Framer Motion) -->
+    <script src="https://cdn.jsdelivr.net/npm/motion@10.16.2/dist/motion.js"></script>
 
-        :root {
-            --crimson: #E31937;
-        }
-
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: 'Noto Sans SC', 'Inter', sans-serif;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .bento-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(227, 25, 55, 0.1);
-            border-radius: 32px;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bento-card:hover {
-            border-color: var(--crimson);
-            background: rgba(227, 25, 55, 0.04);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(227, 25, 55, 0.1);
-        }
-
-        /* 渐变科技感 */
-        .red-glow {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            background: var(--crimson);
-            filter: blur(80px);
-            opacity: 0.15;
-            pointer-events: none;
-        }
-
-        .huge-title {
-            font-size: clamp(5rem, 18vw, 14rem);
-            line-height: 0.75;
-            font-weight: 900;
-            letter-spacing: -0.06em;
-        }
-
-        .english-detail {
-            font-family: 'Inter';
-            font-size: 0.7rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.3);
-            font-weight: 600;
-        }
-
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1.5rem;
-        }
-
-        /* 滚动条定制 */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: var(--crimson); }
-        
-        /* 数据可视化线条 */
-        .wireframe-line {
-            stroke: var(--crimson);
-            stroke-width: 1;
-            stroke-dasharray: 4;
-            opacity: 0.3;
-        }
-    </style>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        crimson: '#E31937',
-                    }
+                        primary: '#6000ff',
+                        dark: '#000000',
+                        card: '#0a0a0a',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans SC', 'Inter', 'sans-serif'],
+                    },
                 }
             }
         }
     </script>
-</head>
-<body class="p-6 md:p-12 lg:p-20">
 
-    <!-- Navigation -->
-    <nav class="flex justify-between items-start mb-24">
-        <div>
-            <h2 class="text-3xl font-black tracking-tighter italic">PROJECT <span class="text-crimson">RED</span></h2>
-            <p class="english-detail">System Phase: Active / 2026</p>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .bento-card {
+            background: #0a0a0a;
+            border: 1px solid rgba(96, 0, 255, 0.1);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .bento-card:hover {
+            border-color: rgba(96, 0, 255, 0.5);
+            transform: translateY(-5px);
+        }
+
+        .text-huge {
+            font-size: clamp(4rem, 15vw, 12rem);
+            line-height: 0.8;
+            letter-spacing: -0.05em;
+        }
+
+        .outline-text {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+            color: transparent;
+        }
+
+        .glow-dot {
+            width: 8px;
+            height: 8px;
+            background: #6000ff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #6000ff;
+        }
+
+        /* 隐藏滚动条 */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6000ff;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- 导航栏 -->
+    <nav class="flex justify-between items-center mb-12 max-w-7xl mx-auto">
+        <div class="flex items-center gap-2">
+            <div class="glow-dot"></div>
+            <span class="font-bold tracking-tighter text-xl">MOONLIGHT</span>
         </div>
-        <div class="hidden md:flex flex-col items-end space-y-2">
-            <div class="flex space-x-10 text-xs font-bold tracking-widest uppercase">
-                <a href="#" class="hover:text-crimson transition-all">Archives / 档案</a>
-                <a href="#" class="hover:text-crimson transition-all">Protocol / 协议</a>
-                <a href="#" class="hover:text-crimson transition-all">Terminal / 终端</a>
-            </div>
-            <div class="h-[1px] w-48 bg-white/10 mt-2"></div>
+        <div class="hidden md:flex gap-8 text-xs tracking-widest uppercase opacity-50">
+            <a href="#" class="hover:text-primary transition-colors">Archive / 档案</a>
+            <a href="#" class="hover:text-primary transition-colors">Members / 成员</a>
+            <a href="https://discord.gg/BHuFeUP3" target="_blank" class="hover:text-primary transition-colors">Join / 加入我们</a>
         </div>
     </nav>
 
-    <!-- Main Bento Grid -->
-    <main class="bento-grid max-w-[1600px] mx-auto">
-        
-        <!-- Hero Section -->
-        <div class="bento-card col-span-12 lg:col-span-8 row-span-2 p-10 flex flex-col justify-end min-h-[500px]">
-            <div class="red-glow top-0 right-0"></div>
-            <div class="mb-10">
-                <p class="english-detail mb-4">Tactical Sound-Based Action</p>
-                <h1 class="huge-title">赤红<br/><span class="text-crimson">代码</span></h1>
-            </div>
-            <div class="flex flex-col md:flex-row justify-between items-end">
-                <p class="max-w-sm text-gray-400 text-sm leading-relaxed border-l-2 border-crimson pl-4">
-                    In a world of total silence, frequency is your power. Break the void. 
-                    <br/><span class="text-white font-bold text-lg mt-2 block">在死寂的世界中，频率即是力量。</span>
-                </p>
-                <button class="mt-6 md:mt-0 px-10 py-5 bg-crimson text-white font-black rounded-full hover:scale-105 transition-transform">
-                    ENTER VOID
-                </button>
-            </div>
-        </div>
-
-        <!-- Stats Card: 2.4M -->
-        <div class="bento-card col-span-12 md:col-span-6 lg:col-span-4 p-10 flex flex-col justify-between group">
-            <div class="flex justify-between items-start">
-                <span class="english-detail">Live Connections</span>
-                <i data-lucide="activity" class="text-crimson w-6 h-6 animate-pulse"></i>
-            </div>
-            <div>
-                <div class="text-[8rem] font-black leading-none text-crimson tracking-tighter group-hover:tracking-normal transition-all duration-700">
-                    2.4<span class="text-white">M</span>
+    <main class="max-w-7xl mx-auto">
+        <!-- Bento Grid 布局 - 优化比例后的网格 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-6 gap-4 h-auto md:min-h-[1100px]">
+            
+            <!-- Hero 核心卡片 (保持冲击力) -->
+            <div class="bento-card md:col-span-3 md:row-span-3 p-8 md:p-12 flex flex-col justify-end overflow-hidden">
+                <div class="absolute top-[-10%] right-[-5%] text-huge outline-text font-black select-none">
+                    01
                 </div>
-                <div class="flex items-center space-x-2 mt-2">
-                    <span class="text-xl font-bold">全网活跃链路</span>
-                    <span class="english-detail">/ Global Active</span>
+                <div class="relative z-10">
+                    <p class="text-primary text-xs tracking-[0.3em] mb-4 uppercase font-light">Established 2023 / 公会成立于</p>
+                    <h1 class="text-6xl md:text-9xl font-black mb-4 leading-none">
+                        月光<br><span class="text-primary">MOONLIGHT</span>
+                    </h1>
+                    <p class="max-w-md opacity-40 text-sm leading-relaxed">
+                        Beyond the shadows, we find our light. 成立于2023年，汇聚全球顶尖玩家。
+                    </p>
+                </div>
+                <svg class="absolute bottom-0 right-0 w-64 opacity-10" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M40,160 Q100,20 160,160" fill="none" stroke="#6000ff" stroke-width="0.5" />
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="#6000ff" stroke-width="0.2" />
+                </svg>
+            </div>
+
+            <!-- Discord 实时面板卡片 -->
+            <div class="bento-card md:col-span-1 md:row-span-4 flex flex-col bg-black overflow-hidden border-primary/20">
+                <div class="p-6 flex justify-between items-center border-b border-white/5">
+                    <div>
+                        <h3 class="text-sm font-bold uppercase tracking-widest">Live Discord</h3>
+                        <p class="text-[10px] opacity-30 italic">Realtime Presence</p>
+                    </div>
+                    <div class="glow-dot animate-pulse"></div>
+                </div>
+                <div class="flex-grow relative flex items-center justify-center bg-[#2f3136]">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-[10px] text-white/10 text-center p-8">
+                        <i class="fa-brands fa-discord text-4xl mb-2"></i>
+                        <p>IF EMPTY: Enable "Server Widget" in Discord Settings</p>
+                    </div>
+                    <iframe src="https://discord.com/widget?id=1201239193993617490&theme=dark" width="100%" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" class="relative z-10"></iframe>
                 </div>
             </div>
-        </div>
 
-        <!-- Data Visualization Card -->
-        <div class="bento-card col-span-12 md:col-span-6 lg:col-span-4 p-8 bg-black/40">
-            <span class="english-detail mb-8 block">Combat Efficiency / 战斗效能</span>
-            <div class="h-32 flex items-end justify-between space-x-2 px-4">
-                <div class="w-full bg-crimson/10 h-[20%] rounded-t-lg transition-all duration-1000" id="bar-1"></div>
-                <div class="w-full bg-crimson/20 h-[45%] rounded-t-lg" id="bar-2"></div>
-                <div class="w-full bg-crimson/40 h-[75%] rounded-t-lg" id="bar-3"></div>
-                <div class="w-full bg-crimson h-[95%] rounded-t-lg" id="bar-4"></div>
-                <div class="w-full bg-crimson/60 h-[60%] rounded-t-lg" id="bar-5"></div>
+            <!-- 会长介绍卡片 (调整为 row-span-1) -->
+            <div class="bento-card md:col-span-1 md:row-span-1 p-6 flex flex-col justify-center">
+                <div class="relative z-10">
+                    <p class="text-primary text-[9px] tracking-widest uppercase mb-1 font-bold">Guild Master</p>
+                    <h2 class="text-4xl font-black">乐生</h2>
+                    <p class="text-[9px] opacity-40 uppercase tracking-tighter">Founder of Moonlight</p>
+                </div>
             </div>
-            <div class="mt-8 flex justify-between items-end">
+
+            <!-- 加入通道卡片 (改为跳转链接) -->
+            <a href="https://discord.gg/BHuFeUP3" target="_blank" class="bento-card md:col-span-1 md:row-span-1 p-6 flex items-center gap-4 bg-primary text-white border-none cursor-pointer group block decoration-none">
+                <div class="bg-white/10 p-3 rounded-2xl group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                    </svg>
+                </div>
                 <div>
-                    <h3 class="text-5xl font-black italic">A++</h3>
-                    <p class="text-[10px] text-gray-500 uppercase tracking-widest">Rank Rating</p>
+                    <h3 class="text-xl font-bold font-black leading-tight">加入我们</h3>
+                    <p class="text-[9px] opacity-80 uppercase tracking-tighter">Join the expedition</p>
                 </div>
-                <div class="text-right">
-                    <p class="text-xs text-crimson font-mono">STABLE_OS_04</p>
-                </div>
-            </div>
-        </div>
+            </a>
 
-        <!-- Feature Card: Graphics -->
-        <div class="bento-card col-span-12 lg:col-span-4 p-10 flex flex-col justify-between relative">
-            <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-20" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="40" class="wireframe-line" fill="none"/>
-                <path d="M10 50 L90 50 M50 10 L50 90" class="wireframe-line" />
-            </svg>
-            <i data-lucide="zap" class="text-crimson w-10 h-10 mb-4"></i>
-            <div>
-                <h3 class="text-4xl font-black mb-2 leading-tight">虚幻引擎<br/>极境渲染</h3>
-                <p class="english-detail">Unreal Engine 5 Core Implementation</p>
-            </div>
-        </div>
-
-        <!-- News / Twitter Card -->
-        <div class="bento-card col-span-12 md:col-span-6 lg:col-span-4 p-10">
-            <div class="flex justify-between items-center mb-10">
-                <span class="english-detail">Dispatch Logs</span>
-                <span class="w-2 h-2 rounded-full bg-crimson animate-ping"></span>
-            </div>
-            <div class="space-y-8">
-                <div class="group cursor-pointer">
-                    <span class="text-crimson font-mono text-xs">#260120</span>
-                    <h4 class="font-bold text-lg group-hover:text-crimson transition-colors mt-1">版本 2.4 "残响" 全球同步上线</h4>
+            <!-- 荣誉巅峰卡片 (比例微调) -->
+            <div class="bento-card md:col-span-2 md:row-span-3 p-8 flex flex-col">
+                <div class="flex justify-between items-start mb-10">
+                    <div>
+                        <h3 class="text-2xl font-bold">荣誉巅峰</h3>
+                        <p class="text-xs opacity-30 uppercase">Guild Achievements / 02</p>
+                    </div>
+                    <div class="px-3 py-1 border border-white/10 rounded-full text-[10px] opacity-50">UPDATED: 2026</div>
                 </div>
-                <div class="group cursor-pointer opacity-40 hover:opacity-100 transition-opacity">
-                    <span class="text-crimson font-mono text-xs">#251215</span>
-                    <h4 class="font-bold text-lg mt-1">社区开发者访谈：关于声音机制的设计</h4>
-                </div>
-                <div class="group cursor-pointer opacity-40 hover:opacity-100 transition-opacity">
-                    <span class="text-crimson font-mono text-xs">#251102</span>
-                    <h4 class="font-bold text-lg mt-1">红莲骑士限定涂装活动结束公告</h4>
-                </div>
-            </div>
-        </div>
-
-        <!-- Social / Download CTA -->
-        <div class="bento-card col-span-12 md:col-span-6 lg:col-span-4 bg-crimson text-black p-10 group cursor-pointer overflow-hidden">
-            <div class="absolute -right-10 -bottom-10 opacity-10 group-hover:scale-150 transition-transform duration-1000">
-                <i data-lucide="download" class="w-64 h-64 text-black"></i>
-            </div>
-            <div class="relative z-10 flex flex-col h-full justify-between">
-                <div>
-                    <h2 class="text-5xl font-black italic uppercase leading-none">Access<br/>Denied?</h2>
-                    <p class="font-bold text-sm mt-2 opacity-70">点击获取访问权限</p>
-                </div>
-                <div class="mt-12">
-                    <div class="flex items-center space-x-4">
-                        <div class="bg-black text-white px-6 py-3 rounded-full font-black text-sm">DOWNLOAD.EXE</div>
-                        <i data-lucide="arrow-right" class="w-6 h-6"></i>
+                
+                <div class="space-y-6 flex-grow">
+                    <div class="flex items-center gap-6 group">
+                        <div class="text-3xl font-black text-primary/30 group-hover:text-primary transition-colors">01</div>
+                        <div>
+                            <div class="text-base font-bold">CS2 优先分数美服前五</div>
+                            <div class="text-[10px] opacity-30 font-light">CS2 PREMIER RATING: TOP 5 NA</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 group">
+                        <div class="text-3xl font-black text-primary/30 group-hover:text-primary transition-colors">02</div>
+                        <div>
+                            <div class="text-base font-bold">全服首杀：月之暗面</div>
+                            <div class="text-[10px] opacity-30 font-light">SERVER FIRST: THE DARK SIDE OF MOON</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 group">
+                        <div class="text-3xl font-black text-primary/30 group-hover:text-primary transition-colors">03</div>
+                        <div>
+                            <div class="text-base font-bold">竞技场 S3 冠军</div>
+                            <div class="text-[10px] opacity-30 font-light">ARENA SEASON 3 CHAMPIONS</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+            <!-- 胜率趋势卡片 (增加 row-span 以填补空间) -->
+            <div class="bento-card md:col-span-2 md:row-span-2 p-8 flex flex-col">
+                <div class="mb-6 flex justify-between items-end">
+                    <div>
+                        <h3 class="text-xl font-bold">胜率趋势</h3>
+                        <p class="text-xs opacity-30 uppercase">Win Rate Data / 100% Streak</p>
+                    </div>
+                    <div class="text-primary font-black text-2xl tracking-tighter">100%</div>
+                </div>
+                <div class="flex-grow flex items-center justify-center">
+                    <canvas id="winRateChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 页脚社交卡片 -->
+            <div class="bento-card md:col-span-1 md:row-span-1 p-6 flex items-center justify-between">
+                <div class="flex gap-4">
+                    <a href="https://discord.gg/BHuFeUP3" target="_blank" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors">
+                        <i class="fa-brands fa-discord text-sm"></i>
+                    </a>
+                </div>
+                <div class="text-right text-[9px] opacity-20 uppercase leading-tight">
+                    <p>Copyright 2023-2026 Moonlight Guild</p>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="mt-32 border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center">
-        <div class="mb-8 md:mb-0">
-            <p class="english-detail">Crimson Core Framework v4.0.1</p>
-            <p class="text-[10px] text-gray-500 mt-2">© 2026 CRIMSON STUDIO. ALL RIGHTS RESERVED.</p>
-        </div>
-        <div class="flex space-x-8">
-            <a href="#" class="bento-card p-4 hover:bg-crimson/10"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-            <a href="#" class="bento-card p-4 hover:bg-crimson/10"><i data-lucide="github" class="w-5 h-5"></i></a>
-            <a href="#" class="bento-card p-4 hover:bg-crimson/10"><i data-lucide="message-square" class="w-5 h-5"></i></a>
-        </div>
-    </footer>
-
     <script>
-        // 初始化图标
-        lucide.createIcons();
-
-        // Framer Motion 动画逻辑
-        // 由于在 UMD 环境下使用，需通过 window.Motion 或 window.framerMotion 访问
-        const { animate, scroll, inView } = window.Motion;
-
-        // 为所有卡片添加进入动画
-        document.querySelectorAll('.bento-card').forEach((el, i) => {
-            inView(el, ({ target }) => {
-                animate(
-                    target, 
-                    { opacity: [0, 1], y: [40, 0], scale: [0.95, 1] }, 
-                    { duration: 0.8, delay: i * 0.05, easing: [0.17, 0.55, 0.55, 1] }
+        window.onload = () => {
+            if (typeof motion !== 'undefined') {
+                const { animate, stagger } = motion;
+                animate(".bento-card", 
+                    { opacity: [0, 1], y: [40, 0] }, 
+                    { duration: 0.8, delay: stagger(0.1), easing: [0.175, 0.885, 0.32, 1.1] }
                 );
-            });
-        });
+            }
 
-        // 简单的柱状图动态效果
-        setInterval(() => {
-            [1, 2, 3, 4, 5].forEach(id => {
-                const bar = document.getElementById(`bar-${id}`);
-                const randomHeight = Math.floor(Math.random() * 80) + 20;
-                bar.style.height = `${randomHeight}%`;
+            const ctx = document.getElementById('winRateChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN'],
+                    datasets: [{
+                        label: 'WIN RATE',
+                        data: [100, 100, 100, 100, 100, 100], 
+                        borderColor: '#6000ff',
+                        borderWidth: 4,
+                        pointBackgroundColor: '#6000ff',
+                        pointRadius: 0,
+                        pointHoverRadius: 8,
+                        tension: 0, 
+                        fill: true,
+                        backgroundColor: (context) => {
+                            const chart = context.chart;
+                            const {ctx, chartArea} = chart;
+                            if (!chartArea) return null;
+                            const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                            gradient.addColorStop(0, 'rgba(96, 0, 255, 0)');
+                            gradient.addColorStop(1, 'rgba(96, 0, 255, 0.3)');
+                            return gradient;
+                        },
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.2)', font: { size: 10 } } },
+                        y: { min: 0, max: 110, display: false, grid: { display: false } }
+                    }
+                }
             });
-        }, 2000);
+        };
     </script>
 </body>
 </html>
