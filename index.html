@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOONLIGHT | 游戏公会</title>
+    <title>独立游戏月光光脱光光</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -86,51 +86,40 @@
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- 导航栏 -->
+    <!-- 导航栏 - 仅保留 Logo 和 加入链接 -->
     <nav class="flex justify-between items-center mb-12 max-w-7xl mx-auto">
         <div class="flex items-center gap-2">
             <div class="glow-dot"></div>
             <span class="font-bold tracking-tighter text-xl">MOONLIGHT</span>
         </div>
         <div class="hidden md:flex gap-8 text-xs tracking-widest uppercase opacity-50">
-            <a href="#" class="hover:text-primary transition-colors">Archive / 档案</a>
-            <a href="#" class="hover:text-primary transition-colors">Members / 成员</a>
             <a href="https://discord.gg/BHuFeUP3" target="_blank" class="hover:text-primary transition-colors">Join / 加入我们</a>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto">
-        <!-- Bento Grid 布局 - 优化比例后的网格 -->
         <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-6 gap-4 h-auto md:min-h-[1100px]">
             
-            <!-- Hero 核心卡片 (保持冲击力) -->
+            <!-- Hero 核心卡片 -->
             <div class="bento-card md:col-span-3 md:row-span-3 p-8 md:p-12 flex flex-col justify-end overflow-hidden">
-                <div class="absolute top-[-10%] right-[-5%] text-huge outline-text font-black select-none">
-                    01
-                </div>
                 <div class="relative z-10">
                     <p class="text-primary text-xs tracking-[0.3em] mb-4 uppercase font-light">Established 2023 / 公会成立于</p>
-                    <h1 class="text-6xl md:text-9xl font-black mb-4 leading-none">
-                        月光<br><span class="text-primary">MOONLIGHT</span>
+                    <h1 class="text-4xl md:text-7xl font-black mb-4 leading-tight">
+                        月光<br><span class="text-primary">MOONLIGHT</span><br>
                     </h1>
                     <p class="max-w-md opacity-40 text-sm leading-relaxed">
-                        Beyond the shadows, we find our light. 成立于2023年，汇聚全球顶尖玩家。
+                        We keep winning we neverlose. 汇聚全球顶尖玩家。
                     </p>
                 </div>
-                <svg class="absolute bottom-0 right-0 w-64 opacity-10" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M40,160 Q100,20 160,160" fill="none" stroke="#6000ff" stroke-width="0.5" />
-                    <circle cx="100" cy="100" r="80" fill="none" stroke="#6000ff" stroke-width="0.2" />
-                </svg>
             </div>
 
-            <!-- Discord 实时面板卡片 -->
+            <!-- Discord 实时面板 -->
             <div class="bento-card md:col-span-1 md:row-span-4 flex flex-col bg-black overflow-hidden border-primary/20">
                 <div class="p-6 flex justify-between items-center border-b border-white/5">
                     <div>
-                        <h3 class="text-sm font-bold uppercase tracking-widest">Live Discord</h3>
+                        <h3 class="text-sm font-bold uppercase tracking-widest text-primary">Live Discord</h3>
                         <p class="text-[10px] opacity-30 italic">Realtime Presence</p>
                     </div>
-                    <div class="glow-dot animate-pulse"></div>
                 </div>
                 <div class="flex-grow relative flex items-center justify-center bg-[#2f3136]">
                     <div class="absolute inset-0 flex flex-col items-center justify-center text-[10px] text-white/10 text-center p-8">
@@ -141,7 +130,7 @@
                 </div>
             </div>
 
-            <!-- 会长介绍卡片 (调整为 row-span-1) -->
+            <!-- 会长介绍 -->
             <div class="bento-card md:col-span-1 md:row-span-1 p-6 flex flex-col justify-center">
                 <div class="relative z-10">
                     <p class="text-primary text-[9px] tracking-widest uppercase mb-1 font-bold">Guild Master</p>
@@ -150,7 +139,7 @@
                 </div>
             </div>
 
-            <!-- 加入通道卡片 (改为跳转链接) -->
+            <!-- 加入通道按钮 -->
             <a href="https://discord.gg/BHuFeUP3" target="_blank" class="bento-card md:col-span-1 md:row-span-1 p-6 flex items-center gap-4 bg-primary text-white border-none cursor-pointer group block decoration-none">
                 <div class="bg-white/10 p-3 rounded-2xl group-hover:scale-110 transition-transform">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -163,7 +152,7 @@
                 </div>
             </a>
 
-            <!-- 荣誉巅峰卡片 (比例微调) -->
+            <!-- 荣誉巅峰 -->
             <div class="bento-card md:col-span-2 md:row-span-3 p-8 flex flex-col">
                 <div class="flex justify-between items-start mb-10">
                     <div>
@@ -184,21 +173,22 @@
                     <div class="flex items-center gap-6 group">
                         <div class="text-3xl font-black text-primary/30 group-hover:text-primary transition-colors">02</div>
                         <div>
-                            <div class="text-base font-bold">全服首杀：月之暗面</div>
-                            <div class="text-[10px] opacity-30 font-light">SERVER FIRST: THE DARK SIDE OF MOON</div>
+                            <div class="text-base font-bold">独立游戏：月光光脱光光</div>
+                            <div class="text-[10px] opacity-30 font-light">Independent Games</div>
                         </div>
                     </div>
                     <div class="flex items-center gap-6 group">
                         <div class="text-3xl font-black text-primary/30 group-hover:text-primary transition-colors">03</div>
                         <div>
-                            <div class="text-base font-bold">竞技场 S3 冠军</div>
-                            <div class="text-[10px] opacity-30 font-light">ARENA SEASON 3 CHAMPIONS</div>
+                            <!-- 已将 text-primary 移除，恢复为默认白色 -->
+                            <div class="text-base font-bold">CS2 优先最快上分车</div>
+                            <div class="text-[10px] opacity-30 font-light">CS2 PREMIER: FASTEST RANK-UP SQUAD</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 胜率趋势卡片 (增加 row-span 以填补空间) -->
+            <!-- 胜率趋势 -->
             <div class="bento-card md:col-span-2 md:row-span-2 p-8 flex flex-col">
                 <div class="mb-6 flex justify-between items-end">
                     <div>
@@ -212,7 +202,7 @@
                 </div>
             </div>
 
-            <!-- 页脚社交卡片 -->
+            <!-- 页脚 -->
             <div class="bento-card md:col-span-1 md:row-span-1 p-6 flex items-center justify-between">
                 <div class="flex gap-4">
                     <a href="https://discord.gg/BHuFeUP3" target="_blank" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors">
