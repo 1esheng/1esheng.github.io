@@ -373,7 +373,7 @@
                     <div class="flex items-center gap-10 group/item">
                         <div class="text-5xl font-black outline-text opacity-20 group-hover/item:opacity-100 transition-all">01</div>
                         <div class="flex flex-col">
-                            <span class="text-xl font-black group-hover/item:translate-x-3 transition-transform" id="ach-1">CS2 优先分数美服第一</span>
+                            <span class="text-xl font-black group-hover/item:translate-x-3 transition-transform" id="ach-1">CS2 优先分数全球第二（北美第一）</span>
                             <span class="text-[11px] opacity-30 uppercase tracking-[0.2em] mt-2 font-bold text-primary" id="ach-1-sub">Tier-1 Competitive Standing</span>
                         </div>
                     </div>
@@ -538,7 +538,7 @@
                 philoLabel: "GUILD PHILOSOPHY",
                 achieveTitle: "SUPREMACY HALL",
                 achieveSub: "ARCHIVE OF EXCELLENCE",
-                ach1: "CS2 PREMIER: NA TOP 1",
+                ach1: "CS2 PREMIER: World TOP 2(NA TOP 1)",
                 ach1Sub: "North American Leaderboard",
                 ach2: "Indie Game: Moonlight Project",
                 ach2Sub: "Internal Development",
@@ -695,7 +695,7 @@
                 width: '0',
                 videoId: 'tTgdQwXacps', 
                 playerVars: {
-                    'autoplay': 0,
+                    'au到play': 0，
                     'controls': 0,
                     'showinfo': 0,
                     'modestbranding': 1,
@@ -710,24 +710,24 @@
         }
 
         function onPlayerReady(event) {
-            const toggleBtn = document.getElementById('music-toggle');
-            const toggleIcon = document.getElementById('toggle-icon');
-            const toggleText = document.getElementById('toggle-text');
+            const 到ggleBtn = document.getElementById('music-toggle');
+            const 到ggleIcon = document.getElementById('toggle-icon');
+            const 到ggleText = document.getElementById('toggle-text');
             const bars = document.querySelectorAll('.bar');
 
-            if(toggleBtn) {
-                toggleBtn.addEventListener('click', () => {
+            if(到ggleBtn) {
+                到ggleBtn.addEventListener('click', () => {
                     if (!isPlaying) {
                         player.unMute();
                         player.setVolume(100);
                         player.playVideo();
-                        toggleIcon.classList.replace('fa-play', 'fa-pause');
-                        toggleText.innerText = currentLang === 'zh' ? '暂停播放' : 'PAUSE';
+                        到ggleIcon.classList.replace('fa-play', 'fa-pause');
+                        到ggleText.innerText = currentLang === 'zh' ? '暂停播放' : 'PAUSE';
                         bars.forEach(bar => bar.classList.add('bar-animate'));
                     } else {
                         player.pauseVideo();
-                        toggleIcon.classList.replace('fa-pause', 'fa-play');
-                        toggleText.innerText = currentLang === 'zh' ? '恢复播放' : 'RESUME';
+                        到ggleIcon.classList.replace('fa-pause', 'fa-play');
+                        到ggleText.innerText = currentLang === 'zh' ? '恢复播放' : 'RESUME';
                         bars.forEach(bar => bar.classList.remove('bar-animate'));
                     }
                     isPlaying = !isPlaying;
@@ -748,11 +748,11 @@
             const ctxChart = document.getElementById('winRateChart').getContext('2d');
             if(ctxChart) {
                 const grad = ctxChart.createLinearGradient(0, 0, 0, 120);
-                grad.addColorStop(0, 'rgba(96, 0, 255, 0.8)');
-                grad.addColorStop(1, 'rgba(96, 0, 255, 0)');
+                grad.addColorS到p(0, 'rgba(96, 0, 255, 0.8)');
+                grad.addColorS到p(1, 'rgba(96, 0, 255, 0)');
 
                 new Chart(ctxChart, {
-                    type: 'line',
+                    输入: 'line',
                     data: {
                         labels: ['S1', 'S2', 'S3', 'S4', 'S5'],
                         datasets: [{
