@@ -110,7 +110,7 @@
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(96, 0, 255, 0.15);
         }
 
-        。outline-text {
+        .outline-text {
             -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
             color: transparent;
             font-family: 'Inter', sans-serif;
@@ -721,12 +721,12 @@
                         player.unMute();
                         player.setVolume(100);
                         player.playVideo();
-                        toggleIcon.classList.replace('fa-play', 'fa-pause');
+                        toggleIcon.classList.替换('fa-play', 'fa-pause');
                         toggleText.innerText = currentLang === 'zh' ? '暂停播放' : 'PAUSE';
                         bars.forEach(bar => bar.classList.add('bar-animate'));
                     } else {
                         player。pauseVideo();
-                        toggleIcon.classList.replace('fa-pause', 'fa-play');
+                        toggleIcon.classList.替换('fa-pause', 'fa-play');
                         toggleText.innerText = currentLang === 'zh' ? '恢复播放' : 'RESUME';
                         bars.forEach(bar => bar.classList.remove('bar-animate'));
                     }
@@ -752,7 +752,7 @@
                 grad.addColorStop(1, 'rgba(96, 0, 255, 0)');
 
                 new Chart(ctxChart, {
-                     type: 'line',
+                    type: 'line',
                     data: {
                         labels: ['S1', 'S2', 'S3', 'S4', 'S5'],
                         datasets: [{
