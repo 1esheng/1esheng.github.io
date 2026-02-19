@@ -110,7 +110,7 @@
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(96, 0, 255, 0.15);
         }
 
-        .outline-text {
+        。outline-text {
             -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
             color: transparent;
             font-family: 'Inter', sans-serif;
@@ -695,7 +695,7 @@
                 width: '0',
                 videoId: 'tTgdQwXacps', 
                 playerVars: {
-                    'au到play': 0，
+                    'autoplay': 0,
                     'controls': 0,
                     'showinfo': 0,
                     'modestbranding': 1,
@@ -710,24 +710,24 @@
         }
 
         function onPlayerReady(event) {
-            const 到ggleBtn = document.getElementById('music-toggle');
-            const 到ggleIcon = document.getElementById('toggle-icon');
-            const 到ggleText = document.getElementById('toggle-text');
+            const toggleBtn = document.getElementById('music-toggle');
+            const toggleIcon = document.getElementById('toggle-icon');
+            const toggleText = document.getElementById('toggle-text');
             const bars = document.querySelectorAll('.bar');
 
-            if(到ggleBtn) {
-                到ggleBtn.addEventListener('click', () => {
+            if(toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
                     if (!isPlaying) {
                         player.unMute();
                         player.setVolume(100);
                         player.playVideo();
-                        到ggleIcon.classList.replace('fa-play', 'fa-pause');
-                        到ggleText.innerText = currentLang === 'zh' ? '暂停播放' : 'PAUSE';
+                        toggleIcon.classList.replace('fa-play', 'fa-pause');
+                        toggleText.innerText = currentLang === 'zh' ? '暂停播放' : 'PAUSE';
                         bars.forEach(bar => bar.classList.add('bar-animate'));
                     } else {
-                        player.pauseVideo();
-                        到ggleIcon.classList.replace('fa-pause', 'fa-play');
-                        到ggleText.innerText = currentLang === 'zh' ? '恢复播放' : 'RESUME';
+                        player。pauseVideo();
+                        toggleIcon.classList.replace('fa-pause', 'fa-play');
+                        toggleText.innerText = currentLang === 'zh' ? '恢复播放' : 'RESUME';
                         bars.forEach(bar => bar.classList.remove('bar-animate'));
                     }
                     isPlaying = !isPlaying;
@@ -748,11 +748,11 @@
             const ctxChart = document.getElementById('winRateChart').getContext('2d');
             if(ctxChart) {
                 const grad = ctxChart.createLinearGradient(0, 0, 0, 120);
-                grad.addColorS到p(0, 'rgba(96, 0, 255, 0.8)');
-                grad.addColorS到p(1, 'rgba(96, 0, 255, 0)');
+                grad.addColorStop(0, 'rgba(96, 0, 255, 0.8)');
+                grad.addColorStop(1, 'rgba(96, 0, 255, 0)');
 
                 new Chart(ctxChart, {
-                    输入: 'line',
+                     type: 'line',
                     data: {
                         labels: ['S1', 'S2', 'S3', 'S4', 'S5'],
                         datasets: [{
