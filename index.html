@@ -72,7 +72,7 @@
             pointer-events: none;
         }
 
-        /* 网格与噪声 */
+        /* 网格背景 */
         body::before {
             content: "";
             position: fixed;
@@ -150,11 +150,6 @@
             to { height: 24px; }
         }
 
-        /* 隐藏滚动条 */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #6000ff; border-radius: 10px; }
-
         #yt-player {
             position: absolute;
             width: 1px; height: 1px;
@@ -184,7 +179,6 @@
             letter-spacing: -0.05em;
         }
 
-        /* 语言切换器样式 */
         .lang-switch {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -209,9 +203,6 @@
         .lang-btn:not(.active) {
             opacity: 0.3;
         }
-        .lang-btn:not(.active):hover {
-            opacity: 0.6;
-        }
     </style>
 </head>
 <body class="p-6 md:p-12 font-sans">
@@ -223,14 +214,11 @@
     <!-- 导航栏 -->
     <nav class="flex justify-between items-center mb-16 max-w-7xl mx-auto">
         <div class="flex items-center gap-4">
-            <div class="flex items-center justify-center">
-                <i class="fa-solid fa-moon text-primary text-2xl animate-pulse icon-glow"></i>
-            </div>
+            <i class="fa-solid fa-moon text-primary text-2xl animate-pulse icon-glow"></i>
             <span class="font-black tracking-tighter text-2xl italic">MOONLIGHT</span>
         </div>
         
         <div class="flex gap-4 items-center">
-            <!-- 新增：语言切换器 -->
             <div class="lang-switch">
                 <button onclick="switchLang('zh')" id="btn-zh" class="lang-btn active">CN</button>
                 <button onclick="switchLang('en')" id="btn-en" class="lang-btn">EN</button>
@@ -244,9 +232,9 @@
     </nav>
 
     <main class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 h-auto">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             
-            <!-- Hero 核心卡片 -->
+            <!-- Hero 主展示区 -->
             <div class="bento-card md:col-span-3 md:row-span-2 p-12 md:p-20 flex flex-col justify-end overflow-hidden group">
                 <div class="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-1000 rotate-12">
                     <svg width="500" height="500" viewBox="0 0 100 100">
@@ -254,7 +242,6 @@
                         <rect x="25" y="25" width="50" height="50" fill="none" stroke="white" stroke-width="0.05" />
                     </svg>
                 </div>
-
                 <div class="relative z-10">
                     <p class="text-primary text-sm tracking-[0.5em] mb-8 uppercase font-black" id="hero-tag">Elite Gaming Guild / 始于2023</p>
                     <h1 class="text-6xl md:text-9xl font-black mb-8 leading-[0.85] tracking-tighter" id="hero-title">
@@ -263,45 +250,40 @@
                     </h1>
                     <div class="flex items-center gap-6 opacity-30 group-hover:opacity-100 transition-opacity">
                         <div class="h-[1px] w-20 bg-white"></div>
-                        <p class="text-xs tracking-[0.3em] uppercase font-bold text-white/50 group-hover:text-white transition-colors" id="hero-philosophy">We keep winning, we never lose.</p>
+                        <p class="text-xs tracking-[0.3em] uppercase font-bold" id="hero-philosophy">We keep winning, we never lose.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Discord 实时面板 -->
-            <div class="bento-card md:col-span-1 md:row-span-3 flex flex-col bg-black overflow-hidden border-primary/20 shadow-2xl">
+            <!-- Discord 面板 -->
+            <div class="bento-card md:col-span-1 md:row-span-3 flex flex-col bg-black overflow-hidden border-primary/20">
                 <div class="p-6 flex justify-between items-center border-b border-white/5 bg-white/5">
                     <div>
                         <h3 class="text-xs font-black uppercase tracking-widest text-primary" id="discord-title">Neural Network</h3>
                         <p class="text-[9px] opacity-20 italic">REAL-TIME COMM HUB</p>
                     </div>
-                    <div class="flex gap-1">
-                        <div class="w-1 h-1 bg-primary rounded-full animate-bounce"></div>
-                        <div class="w-1 h-1 bg-primary rounded-full animate-bounce delay-100"></div>
-                        <div class="w-1 h-1 bg-primary rounded-full animate-bounce delay-200"></div>
-                    </div>
                 </div>
-                <div class="flex-grow relative flex items-center justify-center bg-[#050505]">
-                    <iframe src="https://discord.com/widget?id=1201239193993617490&theme=dark" width="100%" height="100%" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" class="relative z-10"></iframe>
+                <div class="flex-grow">
+                    <iframe src="https://discord.com/widget?id=1201239193993617490&theme=dark" width="100%" height="100%" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
                 </div>
             </div>
 
-            <!-- 发展进度卡片 -->
-            <div class="bento-card md:col-span-2 p-10 flex flex-col justify-between group">
+            <!-- 建设进度 -->
+            <div class="bento-card md:col-span-2 p-10 flex flex-col justify-between">
                 <div>
                     <h3 class="text-2xl font-black mb-2" id="progress-title">公会建设 / STATUS</h3>
-                    <p class="text-xs opacity-40 uppercase tracking-widest font-bold" id="progress-ver">Moonlight Infrastructure - v2.4</p>
+                    <p class="text-xs opacity-40 uppercase tracking-widest font-bold">Moonlight Infrastructure - v2.4</p>
                 </div>
                 <div class="mt-8 space-y-6">
                     <div>
-                        <div class="flex justify-between text-[10px] mb-2 uppercase tracking-widest font-bold">
+                        <div class="flex justify-between text-[10px] mb-2 font-bold uppercase tracking-widest">
                             <span id="progress-l1">Guild Architecture / 公会底层</span>
                             <span class="text-primary">94%</span>
                         </div>
                         <div class="progress-bar"><div class="progress-inner" style="width: 94%"></div></div>
                     </div>
                     <div>
-                        <div class="flex justify-between text-[10px] mb-2 uppercase tracking-widest font-bold">
+                        <div class="flex justify-between text-[10px] mb-2 font-bold uppercase tracking-widest">
                             <span id="progress-l2">Visual Identity / 视觉识别系统</span>
                             <span class="text-primary">88%</span>
                         </div>
@@ -310,18 +292,16 @@
                 </div>
             </div>
 
-            <!-- 音乐播放板块 -->
+            <!-- 音乐播放器 -->
             <div class="bento-card md:col-span-1 p-8 flex flex-col justify-between group">
                 <div class="flex justify-between items-start">
                     <div class="bg-primary/20 p-3 rounded-2xl group-hover:bg-primary/40 transition-colors">
                         <i class="fa-solid fa-music text-primary"></i>
                     </div>
                     <div class="flex gap-1 mt-3" id="visualizer">
-                        <div class="bar bar-animate" style="animation-delay: 0s"></div>
+                        <div class="bar bar-animate"></div>
                         <div class="bar bar-animate" style="animation-delay: 0.2s"></div>
                         <div class="bar bar-animate" style="animation-delay: 0.4s"></div>
-                        <div class="bar bar-animate" style="animation-delay: 0.1s"></div>
-                        <div class="bar bar-animate" style="animation-delay: 0.3s"></div>
                     </div>
                 </div>
                 <div>
@@ -331,159 +311,79 @@
                         <i class="fa-solid fa-play" id="toggle-icon"></i>
                         <span id="toggle-text">播放音乐</span>
                     </button>
-                    <p id="music-hint" class="text-[8px] opacity-20 text-center mt-2 uppercase">需要手动点击以解除浏览器静音</p>
-                </div>
-            </div>
-
-            <!-- 会长卡片 -->
-            <div class="bento-card md:col-span-1 p-8 flex flex-col justify-end group">
-                <div class="absolute top-0 right-0 p-6 opacity-10">
-                    <i class="fa-solid fa-crown text-6xl"></i>
-                </div>
-                <div class="relative z-10">
-                    <p class="text-primary text-[10px] tracking-[0.4em] uppercase mb-2 font-black" id="commander-tag">Commander</p>
-                    <h2 class="text-6xl font-black group-hover:scale-105 transition-transform origin-left text-white/90" id="commander-name">乐生</h2>
-                    <p class="text-[9px] opacity-30 uppercase tracking-widest mt-2" id="commander-sub">Visionary & Founder</p>
-                </div>
-            </div>
-
-            <!-- 公会理念卡片 -->
-            <div class="bento-card md:col-span-1 p-8 flex flex-col justify-between group bg-gradient-to-br from-card to-black">
-                <div class="relative">
-                    <p class="text-2xl font-black leading-tight tracking-tighter group-hover:text-primary transition-colors duration-500">
-                        WE KEEP WINNING<br>WE NEVER LOSE
-                    </p>
-                </div>
-                <div class="mt-4 pt-4 border-t border-white/5">
-                    <span class="text-primary text-[10px] font-black uppercase tracking-widest" id="philo-label">Philosophy / 公会精神</span>
                 </div>
             </div>
 
             <!-- 荣誉巅峰 -->
             <div class="bento-card md:col-span-2 md:row-span-2 p-12 flex flex-col">
-                <div class="flex justify-between items-start mb-16">
-                    <div>
-                        <h3 class="text-4xl font-black tracking-tighter" id="achieve-title">荣誉巅峰</h3>
-                        <p class="text-[10px] opacity-20 uppercase tracking-[0.3em] mt-2 italic" id="achieve-sub">The Hall of Supremacy</p>
-                    </div>
-                    <div class="text-primary text-4xl font-black italic opacity-20 group-hover:opacity-100 transition-opacity">RANKED</div>
+                <div class="mb-12">
+                    <h3 class="text-4xl font-black tracking-tighter" id="achieve-title">荣誉巅峰</h3>
+                    <p class="text-[10px] opacity-20 uppercase tracking-[0.3em] mt-2 italic" id="achieve-sub">The Hall of Supremacy</p>
                 </div>
-                
                 <div class="space-y-10 flex-grow">
                     <div class="flex items-center gap-10 group/item">
                         <div class="text-5xl font-black outline-text opacity-20 group-hover/item:opacity-100 transition-all">01</div>
-                        <div class="flex flex-col">
-                            <span class="text-xl font-black group-hover/item:translate-x-3 transition-transform" id="ach-1">CS2 优先分数全球第二（北美第一）</span>
-                            <span class="text-[11px] opacity-30 uppercase tracking-[0.2em] mt-2 font-bold text-primary" id="ach-1-sub">Tier-1 Competitive Standing</span>
+                        <div>
+                            <span class="text-xl font-black block group-hover/item:translate-x-3 transition-transform" id="ach-1">CS2 优先分数全球第二（北美第一）</span>
+                            <span class="text-[11px] opacity-30 uppercase font-bold text-primary">Tier-1 Competitive</span>
                         </div>
                     </div>
                     <div class="flex items-center gap-10 group/item">
                         <div class="text-5xl font-black outline-text opacity-20 group-hover/item:opacity-100 transition-all">02</div>
-                        <div class="flex flex-col">
-                            <span class="text-xl font-black group-hover/item:translate-x-3 transition-transform text-white/90" id="ach-2">独立游戏：月光光脱光光</span>
-                            <span class="text-[11px] opacity-30 uppercase tracking-[0.2em] mt-2 font-bold text-primary" id="ach-2-sub">EXCLUSIVE PROJECT</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-10 group/item">
-                        <div class="text-5xl font-black outline-text opacity-20 group-hover/item:opacity-100 transition-all">03</div>
-                        <div class="flex flex-col">
-                            <span class="text-xl font-black group-hover/item:translate-x-3 transition-transform text-white/90" id="ach-3">CS2 优先最快上分车</span>
-                            <span class="text-[11px] opacity-30 uppercase tracking-[0.2em] mt-2 font-bold text-primary" id="ach-3-sub">Unrivaled Efficiency</span>
+                        <div>
+                            <span class="text-xl font-black block group-hover/item:translate-x-3 transition-transform" id="ach-2">独立游戏：月光光脱光光</span>
+                            <span class="text-[11px] opacity-30 uppercase font-bold text-primary">EXCLUSIVE PROJECT</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 加入按钮 -->
-            <a href="https://discord.com/invite/moon1ight" target="_blank" class="bento-card md:col-span-1 md:row-span-1 p-8 flex flex-col justify-between bg-primary text-white border-none cursor-pointer group shadow-2xl shadow-primary/40 overflow-hidden transition-all duration-500 hover:-rotate-1">
-                <div class="bg-black/20 w-16 h-16 rounded-3xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-500">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="text-3xl font-black leading-none tracking-tighter" id="join-big">马上加入</h3>
-                    <p class="text-[10px] opacity-80 uppercase tracking-[0.2em] mt-3 font-black italic" id="join-sub">DEPLOY NOW</p>
-                </div>
-                <div class="absolute bottom-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
-                    <i class="fa-solid fa-arrow-right text-4xl"></i>
-                </div>
-            </a>
-
-            <!-- 数据可视化 (胜率) -->
-            <div class="bento-card md:col-span-1 md:row-span-1 p-8 flex flex-col group">
-                <div class="flex justify-between items-start mb-6">
-                    <div>
-                        <h3 class="text-xl font-black" id="winrate-title">胜率趋势</h3>
-                        <p class="text-[9px] opacity-30 uppercase font-bold tracking-widest mt-1">WIN RATE ALPHA</p>
-                    </div>
-                    <div class="text-primary font-black text-2xl tracking-tighter">100%</div>
-                </div>
-                <div class="flex-grow flex items-center justify-center">
-                    <canvas id="winRateChart"></canvas>
-                </div>
-            </div>
-
-            <!-- 技术栈卡片 -->
-            <div class="bento-card md:col-span-2 p-10 flex items-center justify-between">
-                <div>
-                    <h3 class="text-sm font-black uppercase tracking-[0.3em] text-primary mb-4" id="tech-title">Core Focus / 核心领域</h3>
-                    <div class="flex flex-wrap gap-4 text-[10px] font-bold opacity-40">
-                        <span class="px-3 py-1 border border-white/10 rounded-full">FPS COMPETITIVE</span>
-                        <span class="px-3 py-1 border border-white/10 rounded-full">GLOBAL RANKING</span>
-                        <span class="px-3 py-1 border border-white/10 rounded-full">COMMUNITY DEV</span>
-                        <span class="px-3 py-1 border border-white/10 rounded-full">GAME ANALYTICS</span>
-                    </div>
-                </div>
-                <div class="hidden md:block opacity-10">
-                    <i class="fa-solid fa-microchip text-6xl icon-glow"></i>
-                </div>
-            </div>
-
-            <!-- 本地时间模块 -->
+            <!-- 系统时钟 -->
             <div class="bento-card md:col-span-2 p-10 flex flex-col justify-center items-center group relative overflow-hidden">
                 <div class="scanline"></div>
                 <div class="absolute top-6 left-8 flex items-center gap-3">
                     <div class="w-2 h-2 rounded-full bg-primary animate-ping"></div>
-                    <div>
-                        <h3 class="text-xs font-black uppercase tracking-[0.2em]" id="clock-title">系统时间 / LOCAL CLOCK</h3>
-                        <p id="current-date" class="text-[9px] opacity-30 uppercase font-bold tracking-widest mt-0.5">---</p>
-                    </div>
+                    <h3 class="text-xs font-black uppercase tracking-[0.2em]" id="clock-title">系统时间 / LOCAL CLOCK</h3>
                 </div>
-                
                 <div class="relative py-4 text-center">
-                    <div id="local-time" class="clock-text font-black tracking-tighter text-white/90">00:00:00</div>
-                    <div class="flex justify-between items-center mt-2 px-1">
+                    <div id="local-time" class="clock-text font-black tracking-tighter">00:00:00</div>
+                    <div class="flex justify-between mt-2 px-1">
                         <span class="text-[8px] opacity-20 font-mono tracking-widest">UTC+0800 / SYNCED</span>
                         <span class="text-[8px] opacity-20 font-mono tracking-widest" id="clock-ms">000 MS</span>
                     </div>
                 </div>
-
-                <div class="absolute bottom-6 right-8 text-right opacity-10">
-                    <p class="text-[8px] font-mono leading-none">SERVER_LOC: NORTH_AMERICA</p>
-                    <p class="text-[8px] font-mono leading-none mt-1">STATUS: OPERATIONAL</p>
-                </div>
             </div>
+
+            <!-- 胜率数据 -->
+            <div class="bento-card md:col-span-1 p-8 flex flex-col group">
+                <div class="mb-6">
+                    <h3 class="text-xl font-black" id="winrate-title">胜率趋势</h3>
+                    <p class="text-[9px] opacity-30 uppercase font-bold tracking-widest mt-1">WIN RATE ALPHA</p>
+                </div>
+                <div class="flex-grow"><canvas id="winRateChart"></canvas></div>
+            </div>
+
+            <!-- 加入按钮 -->
+            <a href="https://discord.com/invite/moon1ight" target="_blank" class="bento-card md:col-span-1 p-8 flex flex-col justify-between bg-primary text-white border-none group transition-all duration-500 hover:-rotate-1">
+                <div class="bg-black/20 w-16 h-16 rounded-3xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-500">
+                    <i class="fa-solid fa-paper-plane text-2xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-black tracking-tighter" id="join-big">马上加入</h3>
+                    <p class="text-[10px] opacity-80 uppercase tracking-[0.2em] mt-3 font-black italic">DEPLOY NOW</p>
+                </div>
+            </a>
 
             <!-- 页脚 -->
-            <div class="bento-card md:col-span-4 p-8 flex items-center justify-between bg-black/40 border-t border-white/5">
-                <div class="flex gap-8 items-center">
-                    <a href="https://discord.com/invite/moon1ight" target="_blank" class="opacity-20 hover:opacity-100 hover:text-primary transition-all">
-                        <i class="fa-brands fa-discord text-xl"></i>
-                    </a>
-                    <div class="h-4 w-[1px] bg-white/10"></div>
-                    <p class="text-[9px] font-black opacity-10 uppercase tracking-[0.5em]">SYSTEM-MOONLIGHT-2026-CORE</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-[8px] opacity-10 uppercase font-black" id="footer-secure">Encrypted Access Only. © All Assets Secured.</p>
-                </div>
+            <div class="bento-card md:col-span-4 p-8 flex items-center justify-between bg-black/40">
+                <p class="text-[9px] font-black opacity-10 uppercase tracking-[0.5em]">SYSTEM-MOONLIGHT-CORE</p>
+                <p class="text-[8px] opacity-10 uppercase font-black">© 2026 All Assets Secured.</p>
             </div>
-
         </div>
     </main>
 
     <script>
-        // --- 多语言适配逻辑 ---
+        // --- 翻译配置 ---
         const translations = {
             zh: {
                 navJoin: "Join Access / 加入我们",
@@ -492,31 +392,18 @@
                 heroPhilo: "We keep winning, we never lose.",
                 discordTitle: "Neural Network",
                 progressTitle: "公会建设 / STATUS",
-                progressVer: "Moonlight Infrastructure - v2.4",
                 progressL1: "Guild Architecture / 公会底层",
                 progressL2: "Visual Identity / 视觉识别系统",
                 musicTag: "Atmosphere",
                 musicName: "有我 - Moonlight",
                 musicBtn: "播放音乐",
-                musicHint: "需要手动点击以解除浏览器静音",
-                commanderTag: "Commander",
-                commanderName: "乐生",
-                commanderSub: "Visionary & Founder",
-                philoLabel: "Philosophy / 公会精神",
                 achieveTitle: "荣誉巅峰",
                 achieveSub: "The Hall of Supremacy",
-                ach1: "CS2 优先分数美服前五",
-                ach1Sub: "Tier-1 Competitive Standing",
+                ach1: "CS2 优先分数全球第二（北美第一）",
                 ach2: "独立游戏：月光光脱光光",
-                ach2Sub: "EXCLUSIVE PROJECT",
-                ach3: "CS2 优先最快上分车",
-                ach3Sub: "Unrivaled Efficiency",
-                joinBig: "马上加入",
-                joinSub: "DEPLOY NOW",
-                winrateTitle: "胜率趋势",
-                techTitle: "Core Focus / 核心领域",
                 clockTitle: "系统时间 / LOCAL CLOCK",
-                footerSecure: "Encrypted Access Only. © All Assets Secured."
+                winrateTitle: "胜率趋势",
+                joinBig: "马上加入"
             },
             en: {
                 navJoin: "Join Access / Discord",
@@ -525,41 +412,24 @@
                 heroPhilo: "WE KEEP WINNING, WE NEVER LOSE.",
                 discordTitle: "NEURAL NETWORK",
                 progressTitle: "GUILD PROGRESS",
-                progressVer: "Moonlight Infrastructure - v2.4",
                 progressL1: "Guild Core Architecture",
                 progressL2: "Visual Identity System",
                 musicTag: "AMBIENCE",
                 musicName: "With Me - Moonlight",
                 musicBtn: "PLAY TRACK",
-                musicHint: "MANUAL CLICK REQUIRED FOR AUDIO",
-                commanderTag: "COMMANDER",
-                commanderName: "LE SHENG",
-                commanderSub: "Visionary & Founder",
-                philoLabel: "GUILD PHILOSOPHY",
                 achieveTitle: "SUPREMACY HALL",
                 achieveSub: "ARCHIVE OF EXCELLENCE",
                 ach1: "CS2 PREMIER: World TOP 2(NA TOP 1)",
-                ach1Sub: "North American Leaderboard",
                 ach2: "Indie Game: Moonlight Project",
-                ach2Sub: "Internal Development",
-                ach3: "CS2: Hyper Ranking Squad",
-                ach3Sub: "Ultimate Efficiency",
-                joinBig: "JOIN SQUAD",
-                joinSub: "INITIALIZE DEPLOYMENT",
-                winrateTitle: "WIN RATE ALPHA",
-                techTitle: "CORE SPECIALIZATION",
                 clockTitle: "SYSTEM CLOCK / LOCAL",
-                footerSecure: "Encrypted Access Only. © All Assets Secured."
+                winrateTitle: "WIN RATE ALPHA",
+                joinBig: "JOIN SQUAD"
             }
         };
 
-        let currentLang = 'zh';
-
         function switchLang(lang) {
-            currentLang = lang;
             document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
             document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            
             const t = translations[lang];
             document.getElementById('nav-join').innerText = t.navJoin;
             document.getElementById('hero-tag').innerText = t.heroTag;
@@ -567,215 +437,72 @@
             document.getElementById('hero-philosophy').innerText = t.heroPhilo;
             document.getElementById('discord-title').innerText = t.discordTitle;
             document.getElementById('progress-title').innerText = t.progressTitle;
-            document.getElementById('progress-ver').innerText = t.progressVer;
             document.getElementById('progress-l1').innerText = t.progressL1;
             document.getElementById('progress-l2').innerText = t.progressL2;
             document.getElementById('music-tag').innerText = t.musicTag;
             document.getElementById('music-name').innerText = t.musicName;
-            document.getElementById('toggle-text').innerText = isPlaying ? (lang === 'zh' ? '暂停播放' : 'PAUSE') : t.musicBtn;
-            document.getElementById('music-hint').innerText = t.musicHint;
-            document.getElementById('commander-tag').innerText = t.commanderTag;
-            document.getElementById('commander-name').innerText = t.commanderName;
-            document.getElementById('commander-sub').innerText = t.commanderSub;
-            document.getElementById('philo-label').innerText = t.philoLabel;
             document.getElementById('achieve-title').innerText = t.achieveTitle;
             document.getElementById('achieve-sub').innerText = t.achieveSub;
             document.getElementById('ach-1').innerText = t.ach1;
-            document.getElementById('ach-1-sub').innerText = t.ach1Sub;
             document.getElementById('ach-2').innerText = t.ach2;
-            document.getElementById('ach-2-sub').innerText = t.ach2Sub;
-            document.getElementById('ach-3').innerText = t.ach3;
-            document.getElementById('ach-3-sub').innerText = t.ach3Sub;
-            document.getElementById('join-big').innerText = t.joinBig;
-            document.getElementById('join-sub').innerText = t.joinSub;
-            document.getElementById('winrate-title').innerText = t.winrateTitle;
-            document.getElementById('tech-title').innerText = t.techTitle;
             document.getElementById('clock-title').innerText = t.clockTitle;
-            document.getElementById('footer-secure').innerText = t.footerSecure;
-
-            // 触发时间刷新以应用新的日期格式
-            updateTime();
+            document.getElementById('winrate-title').innerText = t.winrateTitle;
+            document.getElementById('join-big').innerText = t.joinBig;
         }
 
-        // --- 鼠标粒子交互系统 ---
+        // --- 鼠标粒子 ---
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        window.addEventListener('resize', resize);
-        resize();
+        window.onresize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+        window.onresize();
 
         class Particle {
             constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.size = Math.random() * 3 + 1;
-                this.speedX = Math.random() * 2 - 1;
-                this.speedY = Math.random() * 2 - 1;
-                this.color = '#6000ff';
+                this.x = x; this.y = y; this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 1 - 0.5; this.speedY = Math.random() * 1 - 0.5;
                 this.alpha = 1;
             }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.alpha > 0.02) this.alpha -= 0.02;
-            }
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
+            update() { this.x += this.speedX; this.y += this.speedY; this.alpha -= 0.01; }
+            draw() { ctx.globalAlpha = this.alpha; ctx.fillStyle = '#6000ff'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
         }
-
-        function handleParticles() {
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                if (particles[i].alpha <= 0.02) {
-                    particles.splice(i, 1);
-                    i--;
-                }
-            }
-        }
-
-        window.addEventListener('mousemove', (e) => {
-            for (let i = 0; i < 3; i++) {
-                particles.push(new Particle(e.x, e.y));
-            }
-        });
 
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            handleParticles();
+            particles.forEach((p, i) => { p.update(); p.draw(); if(p.alpha <= 0) particles.splice(i, 1); });
             requestAnimationFrame(animateParticles);
         }
+        window.onmousemove = (e) => { for(let i=0; i<2; i++) particles.push(new Particle(e.x, e.y)); };
         animateParticles();
 
-        // --- 系统时间更新逻辑 ---
+        // --- 时间更新 ---
         function updateTime() {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const ms = String(now.getMilliseconds()).padStart(3, '0');
-            
-            const timeEl = document.getElementById('local-time');
-            if(timeEl) timeEl.innerText = `${hours}:${minutes}:${seconds}`;
-            
-            const msEl = document.getElementById('clock-ms');
-            if(msEl) msEl.innerText = `${ms} MS`;
-            
-            const dateEl = document.getElementById('current-date');
-            if(dateEl) {
-                const options = currentLang === 'zh' 
-                    ? { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }
-                    : { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                dateEl.innerText = now.toLocaleDateString(currentLang === 'zh' ? 'zh-CN' : 'en-US', options);
-            }
+            document.getElementById('local-time').innerText = now.toTimeString().split(' ')[0];
+            document.getElementById('clock-ms').innerText = String(now.getMilliseconds()).padStart(3, '0') + " MS";
         }
-        setInterval(updateTime, 1); 
-        updateTime();
+        setInterval(updateTime, 1);
 
-        // --- YouTube 与 UI 逻辑 ---
-        let player;
-        let isPlaying = false;
-
+        // --- YouTube & 图表 ---
+        let player, isPlaying = false;
         function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player', {
-                height: '0',
-                width: '0',
-                videoId: 'tTgdQwXacps', 
-                playerVars: {
-                    'autoplay': 0,
-                    'controls': 0,
-                    'showinfo': 0,
-                    'modestbranding': 1,
-                    'loop': 1,
-                    'enablejsapi': 1,
-                    'origin': window.location.origin
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            const toggleBtn = document.getElementById('music-toggle');
-            const toggleIcon = document.getElementById('toggle-icon');
-            const toggleText = document.getElementById('toggle-text');
-            const bars = document.querySelectorAll('.bar');
-
-            if(toggleBtn) {
-                toggleBtn.addEventListener('click', () => {
-                    if (!isPlaying) {
-                        player.unMute();
-                        player.setVolume(100);
-                        player.playVideo();
-                        toggleIcon.classList.替换('fa-play', 'fa-pause');
-                        toggleText.innerText = currentLang === 'zh' ? '暂停播放' : 'PAUSE';
-                        bars.forEach(bar => bar.classList.add('bar-animate'));
-                    } else {
-                        player。pauseVideo();
-                        toggleIcon.classList.替换('fa-pause', 'fa-play');
-                        toggleText.innerText = currentLang === 'zh' ? '恢复播放' : 'RESUME';
-                        bars.forEach(bar => bar.classList.remove('bar-animate'));
-                    }
+            player = new YT.Player('yt-player', { videoId: 'tTgdQwXacps', events: { 'onReady': () => {
+                document.getElementById('music-toggle').onclick = () => {
+                    if(!isPlaying) { player.playVideo(); document.getElementById('toggle-icon').className = 'fa-solid fa-pause'; }
+                    else { player.pauseVideo(); document.getElementById('toggle-icon').className = 'fa-solid fa-play'; }
                     isPlaying = !isPlaying;
-                });
-            }
+                };
+            }}});
         }
 
         window.onload = () => {
-            if (typeof motion !== 'undefined') {
-                const { animate, stagger } = motion;
-                animate(".bento-card", 
-                    { opacity: [0, 1], y: [60, 0], scale: [0.98, 1] }, 
-                    { duration: 1.2, delay: stagger(0.06), easing: [0.16, 1, 0.3, 1] }
-                );
-                animate("nav", { opacity: [0, 1], y: [-20, 0] }, { duration: 1 });
-            }
-
+            if(typeof motion !== 'undefined') motion.animate(".bento-card", { opacity: [0, 1], y: [40, 0] }, { duration: 0.8, delay: motion.stagger(0.1) });
             const ctxChart = document.getElementById('winRateChart').getContext('2d');
-            if(ctxChart) {
-                const grad = ctxChart.createLinearGradient(0, 0, 0, 120);
-                grad.addColorStop(0, 'rgba(96, 0, 255, 0.8)');
-                grad.addColorStop(1, 'rgba(96, 0, 255, 0)');
-
-                new Chart(ctxChart, {
-                    type: 'line',
-                    data: {
-                        labels: ['S1', 'S2', 'S3', 'S4', 'S5'],
-                        datasets: [{
-                            data: [100, 100, 100, 100, 100], 
-                            borderColor: '#6000ff',
-                            borderWidth: 6,
-                            pointRadius: 0,
-                            tension: 0, 
-                            fill: true,
-                            backgroundColor: grad,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            x: { display: false },
-                            y: { display: false, min: 0, max: 120 }
-                        }
-                    }
-                });
-            }
+            new Chart(ctxChart, {
+                type: 'line',
+                data: { labels: [1,2,3,4,5], datasets: [{ data: [100,100,100,100,100], borderColor: '#6000ff', fill: true, backgroundColor: 'rgba(96,0,255,0.1)', tension: 0.4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+            });
         };
     </script>
 </body>
